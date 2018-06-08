@@ -17,7 +17,7 @@ public class Filter {
             {
                 for (short c : currentCategories)
                 {
-                    if (s == c)
+                    if (s == this.changeCategories(c))
                     {
                       if (!current.getAbstractText().equals(""))
                           filtertList.add(changeID(current));
@@ -49,7 +49,7 @@ public class Filter {
             }
 
         }
-        
+
         return filtertList;
     }
 
@@ -80,10 +80,36 @@ public class Filter {
                  break;
          }
 
-
-         return 1;
+         return newCategory;
      }
 
+
+    private int changeCategories (int oldId)
+    {
+
+        int newCategory = 0;
+        switch (oldId){
+            case 41: newCategory = 1;
+                break;
+            case 25: newCategory = 1;
+                break;
+            case 61: newCategory = 2;
+                break;
+            case 63: newCategory = 3;
+                break;
+            case 60: newCategory = 3;
+                break;
+            case 71: newCategory = 4;
+                break;
+            case 38: newCategory = 5;
+                break;
+            case 26: newCategory = 5;
+                break;
+        }
+
+        return newCategory;
+
+    }
 }
 
 
