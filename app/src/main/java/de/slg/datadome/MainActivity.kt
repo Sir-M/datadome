@@ -72,13 +72,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         ui?.isMapToolbarEnabled = false
         googleMap?.setOnMarkerClickListener(this)
 
-        val iterator = baseLocations.iterator()
         locations = baseLocations
-        i = 0
-        iterator.forEach { mapLocation: MapLocation ->
-            drawOnMap(mapLocation, i)
-            i++
-        }
+        filterList(4, enabledCategories)
 
         enableMyLocation() //location services
 
@@ -116,18 +111,21 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         marker?.tag = id
 
+
     }
 
     override fun onMarkerClick(p0: Marker?): Boolean {
         var markerID = p0?.tag
-        // if(markerID != null){
+        Log.i("MARKER Type", markerID.toString())
+        val markedLoc = locations[markerID as Int]
 
-        //  }
         val title = findViewById<TextView>(R.id.title)
         val abstract = findViewById<TextView>(R.id.abstractText)
         val content = findViewById<TextView>(R.id.content)
 
-        //content.setText()
+        title.text = markedLoc.title
+        abstract.setText(markedLoc.abstractText)
+        content.setText(markedLoc.article)
 
         var sumHeight = 100
         title.doOnPreDraw {
@@ -203,10 +201,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         fabMusic.setOnClickListener(this)
 
         dialog.setOnDismissListener {
-
             seekBarProgress = seekBar.progress
             filterList(seekBarProgress, enabledCategories)
-
         }
         val wlp = dialog.window.attributes
         wlp.gravity = Gravity.TOP
@@ -219,7 +215,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         val liste = mutableListOf<Short>()
         for ((a, current) in hashliste.withIndex()) {
             val value = current.second
-
             if (value) {
                 liste.add(a, current.first.toShort())
             }
@@ -231,6 +226,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             drawOnMap(current2, i)
 
         }
+        locations = speicher2
+
     }
 
     private fun getTimespans(p0: Int, liste: List<MapLocation>): List<MapLocation> {
@@ -243,13 +240,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 val cur = Date()
                 ++cur.date
                 return filterTime(liste, cur, cur)
-
             }
             2 -> {
                 val cur = Date()
                 7 + cur.date
                 return filterTime(liste, d, cur)
-
             }
             3 -> {
                 val cur = Date()
