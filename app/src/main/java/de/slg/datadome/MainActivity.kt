@@ -4,9 +4,12 @@ import android.Manifest
 import android.app.Dialog
 import android.app.Fragment
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Rect
 import android.icu.util.Calendar
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.FloatingActionButton
@@ -27,10 +30,6 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
 import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
@@ -40,9 +39,11 @@ import android.view.Window
 import android.widget.*
 import android.icu.util.*
 import android.widget.*
+import com.google.android.gms.maps.model.*
 import kotlinx.android.synthetic.main.dialog_filter.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.HashMap
 
 @Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener, View.OnClickListener {
@@ -52,8 +53,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private val AACHEN = LatLng(50.77580397992759, 6.091018809604975)
     private val ZOOM_LEVEL = 14f
     private lateinit var bottomSheetDialog: BottomSheetBehavior<NestedScrollView>
-    private lateinit var locations: List<MapLocation>
+    private var locations: List<MapLocation> = mutableListOf()
     private val enabledCategories = mutableMapOf(1 to true, 2 to true, 3 to true, 4 to true, 5 to true)
+    private var seekBarProgress = 4
+
     private var i = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -101,11 +104,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         val b = googleMap?.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_custom))
         Log.i("Map", "map loading sucess: " + b.toString())
-        //  val circleDrawable = ContextCompat.getDrawable(this, R.drawable.ic_marker_bus)
-        // val markerIcon = getMarkerIconFromDrawable(circleDrawable!!)
-
-        val m1 = googleMap?.addMarker(MarkerOptions().position(AACHEN).snippet("Geschloseeeen. Dahaha!").title("Cassolette")) //MARKER, testing purposes in Aachen
-        m1?.tag = 0
 
         val ui = googleMap?.uiSettings
         ui?.isRotateGesturesEnabled = false
@@ -113,17 +111,49 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         googleMap?.setOnMarkerClickListener(this)
 
         val iterator = baseLocations.iterator()
+        locations = baseLocations
         i = 0
-        iterator.forEach { }
+        iterator.forEach { mapLocation: MapLocation ->
+            drawOnMap(mapLocation, i)
+            i++
+        }
 
         enableMyLocation() //location services
 
     }
 
-    private fun drawOnMap(m: MapLocation) {
+
+    private fun drawOnMap(m: MapLocation, id: Int) {
         googleMap ?: return
         val geoPos = LatLng(m.geo.lat, m.geo.lon)
-        googleMap?.addMarker(MarkerOptions().position(geoPos).title(m.title))
+
+        var icon = getMarkerIconFromDrawable(getDrawable(R.drawable.ic_ausgehen))
+        when (m.categoryId.toInt()) {
+            1 -> {
+                icon = getMarkerIconFromDrawable(getDrawable(R.drawable.ic_buehne))
+
+            }
+            2 -> {
+                icon = getMarkerIconFromDrawable(getDrawable(R.drawable.ic_restaurant))
+
+            }
+            3 -> {
+                icon = getMarkerIconFromDrawable(getDrawable(R.drawable.ic_ausgehen))
+
+            }
+            4 -> {
+                icon = getMarkerIconFromDrawable(getDrawable(R.drawable.ic_museum))
+
+            }
+            5 -> {
+                icon = getMarkerIconFromDrawable(getDrawable(R.drawable.ic_music))
+
+            }
+        }
+        var marker = googleMap?.addMarker(MarkerOptions().position(geoPos).title(m.title).icon(icon))
+
+        marker?.tag = id
+
     }
 
     override fun onMarkerClick(p0: Marker?): Boolean {
@@ -135,27 +165,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         val abstract = findViewById<TextView>(R.id.abstractText)
         val content = findViewById<TextView>(R.id.content)
 
+
+
         abstract.setText("Das ist ein sehr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das dasdkajdands" +
                 "Das ist ein sehr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das dasdkajdands" +
                 "Das ist ein sehr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das dasdkajdands ")
 
-        content.setText("Das ist ein sehr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das dasdkajdands" +
-                "Das ist ein sehr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das dasdkajdands" +
-                "Das ist ein sehr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das dasdkajdands " +
-                "sehr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das dasdkajdands\" +\n" +
-                "                \"Das ist ein sehr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das dasdkajdands" +
-                "hr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das " +
-                "" +
-                "hr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das " +
-                "hr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das " +
-                "hr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das " +
-                "hr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das " +
-                "hr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das " +
-                "hr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das " +
-                "hr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das " +
-                "hr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das " +
-                "hr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das " +
-                "hr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das ")
+        //content.setText()
 
         var sumHeight = 100
         title.doOnPreDraw {
@@ -198,27 +214,21 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     private fun showDialogFilter() {
         val dialog = Dialog(this)
-        //val v = LayoutInflater.from(applicationContext).inflate(R.layout.dialog_filter, null)
-        // val v = layoutInflaterAndroid.inflate (R.layout.dialog_filter);
         dialog.setContentView(R.layout.dialog_filter)
-        // val builderInfo = AlertDialog.Builder(this)
 
-        val btnClose = dialog.findViewById<ImageButton>(R.id.btn_close).setOnClickListener {
-            dialog.cancel()
-        }
-
+        dialog.findViewById<ImageButton>(R.id.btn_close).setOnClickListener { dialog.cancel() }
         val textDate = dialog.findViewById<TextView>(R.id.textView_date)
-        textDate.text = getString(R.string.date_all)
         val seekBar = dialog.findViewById<SeekBar>(R.id.seekBar)
-        seekBar.progress = 4
+        seekBar.progress = seekBarProgress
+        textDate.text = getDateName(seekBarProgress)
 
         seekBar?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 textDate.text = getDateName(progress)
+
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {
-                // Write code to perform some action when touch is started.
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {
@@ -227,50 +237,42 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         val fabStage = dialog.findViewById<ImageButton>(R.id.fabStage)
         fabStage.setOnClickListener(this)
-
         val fabFood = dialog.findViewById<ImageButton>(R.id.fabFood)
         fabFood.setOnClickListener(this)
-
         val fabNight = dialog.findViewById<ImageButton>(R.id.fabNight)
         fabNight.setOnClickListener(this)
-
         val fabMuseum = dialog.findViewById<ImageButton>(R.id.fabMuseum)
         fabMuseum.setOnClickListener(this)
-
         val fabMusic = dialog.findViewById<ImageButton>(R.id.fabMusic)
         fabMusic.setOnClickListener(this)
 
         dialog.setOnDismissListener {
-            val hashliste = enabledCategories.toList()
-            val liste = mutableListOf<Short>()
-            for ((a, current) in hashliste.withIndex()) {
-                val value = current.second
-<<<<<<< HEAD
-                if (value == true) {
-
-=======
-                if (value) {
->>>>>>> 9ac9588e1b348369b89d9287e2d598d328cb29a0
-                    liste.add(a, current.first.toShort())
-                }
-            }
-            val speicher = getTimespans(seekBar.progress, baseLocations)
-            val speicher2 = filterCategory(speicher, liste)
-            for ((i, current2) in speicher2.withIndex()) {
-            //    drawOnMap(current2, i) toDo
-            }
-
-
+            seekBarProgress = seekBar.progress
+            filterList(seekBarProgress, enabledCategories)
         }
-
         val wlp = dialog.window.attributes
-        //  wlp.x = 150
-        // wlp.y = 200
         wlp.gravity = Gravity.TOP
         dialog.window.attributes = wlp
-
-        Log.i("MainActivity", "btnClose: " + btnClose.toString())
         dialog.show()
+    }
+
+    private fun filterList(timeIndex: Int, categories: MutableMap<Int, Boolean>) {
+        val hashliste = categories.toList()
+        val liste = mutableListOf<Short>()
+        for ((a, current) in hashliste.withIndex()) {
+            val value = current.second
+
+            if (value) {
+                liste.add(a, current.first.toShort())
+            }
+        }
+        val speicher = getTimespans(timeIndex, baseLocations)
+        val speicher2 = filterCategory(speicher, liste)
+        i = 0
+        for ((i, current2) in speicher2.withIndex()) {
+            drawOnMap(current2, i)
+
+        }
     }
 
     private fun getTimespans(p0: Int, liste: List<MapLocation>): List<MapLocation> {
@@ -278,19 +280,16 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         when (p0) {
             0 -> {
                 return filterTime(liste, d, d)
-
             }
             1 -> {
                 val cur = Date()
                 ++cur.date
-
                 return filterTime(liste, cur, cur)
 
             }
             2 -> {
                 val cur = Date()
                 7 + cur.date
-
                 return filterTime(liste, d, cur)
 
             }
@@ -298,14 +297,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 val cur = Date()
                 ++cur.month
                 return filterTime(liste, d, cur)
-
             }
             4 -> {
                 val cur = Date()
                 10 + cur.year
-
                 return filterTime(liste, Date(), cur)
-
             }
         }
         return emptyList()
@@ -333,6 +329,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         return ""
     }
 
+    /**
+     * Handles the clicks on the buttons used in this class, mainly used for the ImageButtons in the filtering dialog,
+     * which have an changing background.
+     *
+     * @param View
+     *
+     */
     override fun onClick(v: View?) {
         if (v?.id == R.id.fabStage) {
             Log.i("onClick", "fabStage")
@@ -382,6 +385,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             }
 
         }
+    }
+
+    fun getMarkerIconFromDrawable(drawable: Drawable): BitmapDescriptor {
+        val canvas = Canvas()
+        val bitmap = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+        canvas.setBitmap(bitmap)
+        drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
+        drawable.draw(canvas)
+        return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
 }
 

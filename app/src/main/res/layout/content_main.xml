@@ -28,7 +28,7 @@
             android:clickable="true"
             android:focusable="true"
             app:fabSize="normal"
-            app:srcCompat="@drawable/ic_outline_ballot_24px" />
+            app:srcCompat="@drawable/ic_filter_list_black_24dp" />
 
     </RelativeLayout>
 

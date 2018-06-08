@@ -18,7 +18,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/E:/ProgramsHDD/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/content/ic_sort_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/E:/ProgramsHDD/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/content/ic_filter_list_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -28,8 +28,9 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_sort_black_24dp" />
-                            <entry key="sourceFile" value="C:\Users\x555\Downloads\outline-account_balance-24px.svg" />
+                            <entry key="assetSourceType" value="FILE" />
+                            <entry key="outputName" value="ic_ausgehen" />
+                            <entry key="sourceFile" value="E:\Folders HDD\1Bilder\Illustrator\datadome\ausgehen.svg" />
                           </map>
                         </option>
                       </PersistentState>
