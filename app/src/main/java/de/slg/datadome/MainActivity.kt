@@ -127,7 +127,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         val abstract = findViewById<TextView>(R.id.abstractText)
         val content = findViewById<TextView>(R.id.content)
 
-        //content.setText()
 
         var sumHeight = 100
         title.doOnPreDraw {
@@ -234,7 +233,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     }
 
     private fun getTimespans(p0: Int, liste: List<MapLocation>): List<MapLocation> {
-        val d = Date();
+        val d = Date()
         when (p0) {
             0 -> {
                 return filterTime(liste, d, d)
@@ -291,7 +290,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
      * Handles the clicks on the buttons used in this class, mainly used for the ImageButtons in the filtering dialog,
      * which have an changing background.
      *
-     * @param View
+     * @param v
      *
      */
     override fun onClick(v: View?) {
