@@ -124,10 +124,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClickListen
         val title = findViewById<TextView>(R.id.title)
         val abstract = findViewById<TextView>(R.id.abstractText)
         val content = findViewById<TextView>(R.id.content)
+        val address = findViewById<TextView>(R.id.address)
 
         title.text = Html.fromHtml(markedLoc.title)
         abstract.text = Html.fromHtml(markedLoc.abstractText)
         content.text = Html.fromHtml(markedLoc.article)
+        address.text = markedLoc.address
 
         var sumHeight = 100
         title.doOnPreDraw {
@@ -190,16 +192,16 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClickListen
             }
         })
 
-        val fabStage = dialog.findViewById<CardView>(R.id.cardStage)
-        fabStage.setOnClickListener(this)
-        val fabFood = dialog.findViewById<CardView>(R.id.cardFood)
-        fabFood.setOnClickListener(this)
-        val fabNight = dialog.findViewById<CardView>(R.id.cardNight)
-        fabNight.setOnClickListener(this)
-        val fabMuseum = dialog.findViewById<CardView>(R.id.cardMuseum)
-        fabMuseum.setOnClickListener(this)
-        val fabMusic = dialog.findViewById<CardView>(R.id.cardMusic)
-        fabMusic.setOnClickListener(this)
+        val cardStage = dialog.findViewById<CardView>(R.id.cardStage)
+        cardStage.setOnClickListener(this)
+        val cardFood = dialog.findViewById<CardView>(R.id.cardFood)
+        cardFood.setOnClickListener(this)
+        val cardNight = dialog.findViewById<CardView>(R.id.cardNight)
+        cardNight.setOnClickListener(this)
+        val cardMuseum = dialog.findViewById<CardView>(R.id.cardMuseum)
+        cardMuseum.setOnClickListener(this)
+        val cardMusic = dialog.findViewById<CardView>(R.id.cardMusic)
+        cardMusic.setOnClickListener(this)
 
         dialog.setOnDismissListener {
             seekBarProgress = seekBar.progress

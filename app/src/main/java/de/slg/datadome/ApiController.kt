@@ -57,7 +57,7 @@ data class MapLocation constructor(val id: Long,
                                    val abstractText: String,
                                    val article: String,
                                    val dates: List<DateRange>,
-                                   val adress: String,
+                                   val address: String,
                                    val postalCode: Int
 )
 
