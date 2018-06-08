@@ -57,31 +57,40 @@ public class Filter {
          return new MapLocation(this.CompareCategories(current), current.getId(), current.getCategoryIds(), current.getGeo(), current.getTitle(), current.getAbstractText(), current.getArticle(), current.getDates(), current.getAdress(), current.getPostalCode());
      }
 
-     private int CompareCategories (Article current)
-     {
+     private int CompareCategories (Article current) {
          int category = current.getCategoryIds().get(0);
          int newCategory = 0;
-         switch (category){
-             case 41: newCategory = 1;
+         switch (category) {
+             case 41:
+                 newCategory = 1;
                  break;
-             case 25: newCategory = 1;
+             case 25:
+                 newCategory = 1;
                  break;
-             case 61: newCategory = 2;
+             case 61:
+                 newCategory = 2;
                  break;
-             case 63: newCategory = 3;
+             case 63:
+                 newCategory = 3;
                  break;
-             case 60: newCategory = 3;
+             case 60:
+                 newCategory = 3;
                  break;
-             case 71: newCategory = 4;
+             case 71:
+                 newCategory = 4;
                  break;
-             case 38: newCategory = 5;
+             case 38:
+                 newCategory = 5;
                  break;
-             case 26: newCategory = 5;
+             case 26:
+                 newCategory = 5;
                  break;
          }
 
          return newCategory;
+
      }
+
 
 
     private int changeCategories (int oldId)

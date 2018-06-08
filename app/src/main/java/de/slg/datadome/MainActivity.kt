@@ -98,16 +98,18 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         return false
     }
 
-   /* private fun test()
-    {
+    private fun test() {
+        val nums2 = mutableListOf<Short>(38)
+        val nums = mutableListOf<Short>(61, 71)
+        val dat = mutableListOf<DateRange>()
+        val geo = GeoCoordinates(1.0, 2.0)
+        val katliste = mutableListOf<Short>(2)
+        val obj1 = Article(334787, nums, geo, "hallo", "hallo", "hallo", dat, "dffi", 424523)
+        val obj2 = Article(334787, nums2, geo, "hallo", "hallo", "hallo", dat, "dffi", 424523)
+        val testliste = mutableListOf<Article>(obj1, obj2)
 
-        obj1 = new
-
-
-
-      val testliste:  List<MapLocation>  = Filter.filterCategory(List<Article> articleList, List<Short> category)
-
-    }*/
+        Filter.filterCategory()
+    }
 
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
