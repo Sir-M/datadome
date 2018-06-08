@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Dialog
 import android.content.DialogInterface
 import android.content.pm.PackageManager
+import android.icu.util.Calendar
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.*
@@ -20,18 +21,23 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
-import android.widget.ImageButton
 import android.view.Gravity
+import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.experimental.async
+import android.view.Window
+import android.icu.util.*
+import android.widget.*
+import kotlinx.android.synthetic.main.dialog_filter.*
+import java.text.SimpleDateFormat
+import java.util.*
 
-
-
+@Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private var googleMap: GoogleMap? = null
     private val perm = 5
     private val AACHEN = LatLng(50.77580397992759, 6.091018809604975)
     private val ZOOM_LEVEL = 14f
-
     private lateinit var locations: List<MapLocation>
     private val enabledCategories = mapOf(1 to true, 2 to true, 3 to true, 4 to true, 5 to true)
 
@@ -42,7 +48,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         val mapFragment: SupportMapFragment? = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment?.getMapAsync(this)  //the map is loaded asynchronously
 
-        val fab = findViewById<FloatingActionButton>(R.id.fabFilter).setOnClickListener {
+        findViewById<FloatingActionButton>(R.id.fabFilter).setOnClickListener {
             showDialogFilter()
 
 
@@ -59,7 +65,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         val b = googleMap?.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_custom))
         Log.i("Map", "map loading sucess: " + b.toString())
-
         //  val circleDrawable = ContextCompat.getDrawable(this, R.drawable.ic_marker_bus)
         // val markerIcon = getMarkerIconFromDrawable(circleDrawable!!)
 
@@ -79,17 +84,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         //    list = getAllGPSData()
         //  }
         //  job.await()
-        Log.i("GPS1", "Job done")
-
         //  for (a in list) {
         //     val latLng = LatLng(a.latitude, a.longitude)
         //  Log.i("GPS1", "LAT: ${a.latitude}")
         //googleMap?.addMarker(MarkerOptions().position(AACHEN).icon(markerIcon).title("BUSNUMMER: 17").snippet("Passagiere: 7")) //Hard-coded. Will be changed
         //  Log.i("GPS1", "Marker set")
-
         // }
-
     }
+
 
     /*   private fun test() {
 
@@ -102,6 +104,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
            val testliste = mutableListOf<MapLocation>(obj1, obj2)
 
            val listefertig = filterCategory(testliste,katliste)
+=======
+    private fun test() {
+        val dat = mutableListOf<DateRange>()
+        val geo = GeoCoordinates(1.0, 2.0)
+        val katliste = mutableListOf<Short>(2)
+        val obj1 = MapLocation(334787, 2, geo, "hallo", "hallo1", "hallo1", dat, "dffi", 424523)
+        val obj2 = MapLocation(334787, 1, geo, "hallo", "hallo", "hallo", dat, "dffi", 424523)
+        val testliste = mutableListOf<MapLocation>(obj1, obj2)
+
+        val listefertig = filterCategory(testliste, katliste)
+>>>>>>> c59968da3e677cdb936e9a8b03cdfdecd4bc258d
 
            val xy = listefertig.get(0)
 
@@ -116,17 +129,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         var b = BottomSheetDialog()
         b.setTitle("test0")
         b.show(this.supportFragmentManager, "test")
-        b.
-                //  }
-                return false
+
+        //  }
+        return false
 
 
     }
 
 
-  /*  private fun fullBottomSheet() {
-        b = findViewById(R.i)
-    }*/
+    /*  private fun fullBottomSheet() {
+          b = findViewById(R.i)
+      }*/
 
 
     private fun enableMyLocation() {
@@ -167,6 +180,27 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             dialog.cancel()
         }
 
+        val textDate = dialog.findViewById<TextView>(R.id.textView_date)
+        textDate.text = getString(R.string.date_today)
+        val seekBar = dialog.findViewById<SeekBar>(R.id.seekBar)
+        seekBar.progress = 0
+
+        seekBar?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                textDate.text = getDateName(progress)
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar) {
+                // Write code to perform some action when touch is started.
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+            }
+
+        })
+
+        dialog.setOnDismissListener { if () }
+
 
         val wlp = dialog.window.attributes
         //  wlp.x = 150
@@ -198,6 +232,66 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         //   wlp.gravity = Gravity.TOP
         dialog.show()
     }
+
+    private fun zwischenmethodeZeiten(p0: Int, liste: List<MapLocation>) {
+           val d = Date();
+        when (p0) {
+            0 -> {
+                filterTime(liste, d, d)
+
+            }
+            1 -> {
+                val cur = Date()
+                ++cur.date
+
+                filterTime(liste, cur, cur)
+
+            }
+            2 -> {
+                val cur = Date()
+                7+cur.date
+
+                filterTime(liste, d, cur)
+
+            }
+            3 -> {
+                val cur = Date()
+                ++cur.month
+                filterTime(liste, d, cur)
+
+            }
+            4 -> {
+                val cur = Date()
+                10+cur.year
+
+                filterTime(liste, Date(), cur )
+
+            }
+        }
+    }
+
+}
+
+
+private fun getDateName(p0: Int): String {
+    when (p0) {
+        0 -> {
+            return getString(R.string.date_today)
+        }
+        1 -> {
+            return getString(R.string.date_tomorrow)
+        }
+        2 -> {
+            return getString(R.string.date_week)
+        }
+        3 -> {
+            return getString(R.string.date_month)
+        }
+        4 -> {
+            return getString(R.string.date_all)
+        }
+    }
+    return ""
 }
 
 

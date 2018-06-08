@@ -19,7 +19,7 @@ class Start : AppCompatActivity() {
         async(UI) {
             try {
                 val job = async(CommonPool) {
-                    baseLocations = getLocationList()
+                //    baseLocations = getLocationList()
                 }
                 job.await()
                 startActivity(Intent(this@Start, MainActivity::class.java))
