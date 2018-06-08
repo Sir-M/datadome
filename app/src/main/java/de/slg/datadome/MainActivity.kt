@@ -23,6 +23,7 @@ import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.widget.ImageButton
 import android.view.Gravity
+import android.view.MotionEvent
 import android.widget.Filter
 import kotlinx.coroutines.experimental.runBlocking
 import kotlinx.coroutines.experimental.async
@@ -42,7 +43,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.content_main)
-        this.test()
 
 
         async {
@@ -63,6 +63,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         val fab = findViewById<FloatingActionButton>(R.id.fabFilter).setOnClickListener {
             showDialogFilter()
+
+
         }
 
 
@@ -108,29 +110,41 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     }
 
-    private fun test() {
+    /*   private fun test() {
 
 
-        val dat = mutableListOf<DateRange>()
-        val geo = GeoCoordinates(1.0, 2.0)
-        val katliste = mutableListOf<Short>(2)
-        val obj1 = MapLocation(334787, 2, geo, "hallo", "hallo1", "hallo1", dat, "dffi", 424523)
-        val obj2 = MapLocation(334787, 1, geo, "hallo", "hallo", "hallo", dat, "dffi", 424523)
-        val testliste = mutableListOf<MapLocation>(obj1, obj2)
+           val dat = mutableListOf<DateRange>()
+           val geo = GeoCoordinates(1.0, 2.0)
+           val katliste = mutableListOf<Short>(2)
+           val obj1 = MapLocation(334787, 2, geo, "hallo", "hallo1", "hallo1", dat, "dffi", 424523)
+           val obj2 = MapLocation(334787, 1, geo, "hallo", "hallo", "hallo", dat, "dffi", 424523)
+           val testliste = mutableListOf<MapLocation>(obj1, obj2)
 
-        val listefertig = filterCategory(testliste,katliste)
+           val listefertig = filterCategory(testliste,katliste)
 
-        val xy = listefertig.get(0)
+           val xy = listefertig.get(0)
 
-        Log.d("Main","xy: "+xy.abstractText)
-    }
+           Log.d("Main","xy: "+xy.abstractText)*/
+
 
     override fun onMarkerClick(p0: Marker?): Boolean {
         var markerID = p0?.tag
         // if(markerID != null){
-        BottomSheetDialog().setTitle("test0").show(this.supportFragmentManager, "test")
-        //  }
-        return false
+
+
+        var b = BottomSheetDialog()
+        b.setTitle("test0")
+        b.show(this.supportFragmentManager, "test")
+        b.
+                //  }
+                return false
+
+
+    }
+
+
+    private fun fullBottomSheet() {
+        b = findViewById(R.i)
     }
 
 
@@ -159,6 +173,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             }
         }
     }
+
 
     private fun showDialogFilter() {
         val dialog = Dialog(this)
@@ -201,6 +216,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         // / val wlp = alertDialog.window.attributes
         //   wlp.gravity = Gravity.TOP
         dialog.show()
-    }}
+    }
+}
 
 
