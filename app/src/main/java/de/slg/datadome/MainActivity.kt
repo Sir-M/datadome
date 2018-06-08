@@ -242,12 +242,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             val liste = mutableListOf<Short>()
             for ((a, current) in hashliste.withIndex()) {
                 val value = current.second
-<<<<<<< HEAD
-                if (value == true) {
 
-=======
+
+
                 if (value) {
->>>>>>> 9ac9588e1b348369b89d9287e2d598d328cb29a0
                     liste.add(a, current.first.toShort())
                 }
             }
