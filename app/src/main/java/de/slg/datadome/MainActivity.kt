@@ -25,6 +25,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+
 import java.util.*
 
 @Suppress("DEPRECATION")
@@ -115,6 +116,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         val marker = googleMap?.addMarker(MarkerOptions().position(geoPos).title(m.title).icon(icon))
 
         marker?.tag = id
+
+    }
+
+
+    });
+
+    override fun onInfoWindowClick(marker: Marker ) {
+        
 
     }
 
