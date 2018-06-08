@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         runBlocking {
             //     locations = Filter.filterCategory(getArticleList(), enabledCategories.map{})
+
         }
 
         val mapFragment: SupportMapFragment? = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
@@ -48,6 +49,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         val fab = findViewById<FloatingActionButton>(R.id.fabFilter).setOnClickListener {
             showDialogFilter()
         }
+       // this.test()
 
     }
 
@@ -90,6 +92,21 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     }
 
+    private fun test() {
+        val nums2 = mutableListOf<Short>(38)
+        val nums = mutableListOf<Short>(61, 71)
+        val dat = mutableListOf<DateRange>()
+        val geo = GeoCoordinates(1.0, 2.0)
+        val katliste = mutableListOf<Short>(2)
+        val obj1 = Article(334787, nums, geo, "hallo", "hallo1", "hallo1", dat, "dffi", 424523)
+        val obj2 = Article(334787, nums2, geo, "hallo", "hallo", "hallo", dat, "dffi", 424523)
+        val testliste = mutableListOf<Article>(obj1, obj2)
+
+        val listefertig = Filter.filterCategory(testliste,katliste)
+        val xy = listefertig.get(0)
+
+        Log.d("Main","xy: "+xy.abstractText)
+    }
 
     override fun onMarkerClick(p0: Marker?): Boolean {
         var markerID = p0?.tag
@@ -157,7 +174,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         alertDialog.show()
         val wlp = alertDialog.window.attributes
         wlp.gravity = Gravity.TOP
-    }
+    }}
 
 
-}
+
+
+
+
+
