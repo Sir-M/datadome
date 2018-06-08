@@ -9,20 +9,161 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginEnd="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_alignTop="@+id/textView_title_filter"
+        android:layout_marginEnd="12dp"
         android:background="@null"
         app:srcCompat="@drawable/places_ic_clear" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/textView_title_filter"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/title2_bold"
+        android:text="Ergebnisse filtern"
+        android:textColor="#333333"
+        android:textSize="17sp" />
+
+    <SeekBar
+        android:id="@+id/seekBar"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="49dp"
-        android:fontFamily="@font/title"
-        android:text="Ergebnisse filtern"
-        android:textSize="18dp" />
+        android:layout_below="@+id/textView_title_filter"
+        android:layout_marginTop="59dp"
+        android:max="4"
+        android:progress="1" />
+
+    <TextView
+        android:id="@+id/textView_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/seekBar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="13dp"
+        android:fontFamily="@font/title2"
+        android:text="Datum: "
+        android:textColor="#333333"
+        android:textSize="16dp" />
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardStage"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="143dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fabStage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="15dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:fabSize="normal"
+                app:srcCompat="@drawable/places_ic_clear" />
+
+            <TextView
+                android:id="@+id/textViewStage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="15dp"
+                android:layout_toEndOf="@id/fabStage"
+                android:fontFamily="@font/title2"
+                android:text="Bühne"
+                android:textColor="#333333"
+                android:textSize="18sp" />
+
+        </RelativeLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardFood"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cardStage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fabFood"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="15dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:fabSize="normal"
+                app:srcCompat="@drawable/places_ic_clear" />
+
+            <TextView
+                android:id="@+id/textViewFood"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="15dp"
+                android:layout_toEndOf="@id/fabFood"
+                android:fontFamily="@font/title2"
+                android:text="Essen&amp;Trinken"
+                android:textColor="#333333"
+                android:textSize="18sp" />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardNight"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cardFood"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fabNight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="15dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:fabSize="normal"
+                app:srcCompat="@drawable/places_ic_clear" />
+
+            <TextView
+                android:id="@+id/textViewNight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="15dp"
+                android:layout_toEndOf="@id/fabNight"
+                android:fontFamily="@font/title2"
+                android:text="Ausgehen"
+                android:textColor="#333333"
+                android:textSize="18sp" />
+
+        </RelativeLayout>
+
+
+    </android.support.v7.widget.CardView>
 </RelativeLayout>

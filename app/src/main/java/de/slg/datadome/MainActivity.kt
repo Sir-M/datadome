@@ -1,6 +1,7 @@
 package de.slg.datadome
 
 import android.Manifest
+import android.app.Dialog
 import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -24,6 +25,7 @@ import android.widget.ImageButton
 import android.view.Gravity
 import kotlinx.coroutines.experimental.runBlocking
 import kotlinx.coroutines.experimental.async
+import android.view.Window
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
@@ -122,7 +124,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     }
 
 
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
             perm -> {
@@ -137,15 +138,24 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     }
 
     private fun showDialogFilter() {
-        val v = LayoutInflater.from(applicationContext).inflate(R.layout.dialog_filter, null)
+        val dialog = Dialog(this)
+        //val v = LayoutInflater.from(applicationContext).inflate(R.layout.dialog_filter, null)
         // val v = layoutInflaterAndroid.inflate (R.layout.dialog_filter);
-        val builderInfo = AlertDialog.Builder(this)
+        dialog.setContentView(R.layout.dialog_filter)
+        // val builderInfo = AlertDialog.Builder(this)
 
-        val btnClose = findViewById<ImageButton>(R.id.btn_close)?.setOnClickListener {
-            DialogInterface.OnClickListener { dialog, which -> dialog.cancel() }
+        val btnClose = dialog.findViewById<ImageButton>(R.id.btn_close).setOnClickListener {
+            dialog.cancel()
         }
 
 
+        val wlp = dialog.window.attributes
+        //  wlp.x = 150
+        // wlp.y = 200
+        wlp.gravity = Gravity.TOP
+        dialog.window.attributes = wlp
+
+        Log.i("MainActivity", "btnClose: " + btnClose.toString())
         //  builderInfo.setTitle(getString(app_name))
         ///  builderInfo.setIcon(R.drawable.ic_pigmentv3)
         //builderInfo.setMessage(getString(info1))
@@ -161,11 +171,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         // ImageView appLogo = findViewById(R.id.applogo);
         //  appLogo.setImageResource(R.drawable.ic_pigmentv3);
 
-        builderInfo.setView(v)
-        val alertDialog = builderInfo.create()
-        alertDialog.show()
-        val wlp = alertDialog.window.attributes
-        wlp.gravity = Gravity.TOP
+        //builderInfo.setView(v)
+        // val alertDialog = builderInfo.create()
+        //  alertDialog.show()
+        // / val wlp = alertDialog.window.attributes
+        //   wlp.gravity = Gravity.TOP
+        dialog.show()
     }
 
 
