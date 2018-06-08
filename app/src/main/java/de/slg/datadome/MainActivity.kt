@@ -23,6 +23,7 @@ import android.view.LayoutInflater
 import android.widget.ImageButton
 import android.view.Gravity
 import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.experimental.async
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
@@ -38,8 +39,16 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         super.onCreate(savedInstanceState)
         setContentView(R.layout.content_main)
 
-        runBlocking {
-       //     locations = Filter.filterCategory(getArticleList(), enabledCategories.map{})
+        async {
+            //
+            runBlocking {
+                val filter = mutableListOf<Short>()
+                for ((key, value) in enabledCategories) {
+                    if (value)
+                        filter.add(key.toShort())
+                }
+                locations = filterCategory(getLocationList(), filter)
+            }
         }
 
         val mapFragment: SupportMapFragment? = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
