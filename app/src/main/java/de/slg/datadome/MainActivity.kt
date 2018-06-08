@@ -1,9 +1,11 @@
 package de.slg.datadome
 
 import android.Manifest
+import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.compat.R.id.async
+import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.*
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
@@ -14,10 +16,16 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import android.support.v7.app.AlertDialog
+import android.view.LayoutInflater
+import android.widget.ImageButton
+import android.view.WindowManager
+import android.view.Gravity
 
 
-class MainActivity : AppCompatActivity(), OnMapReadyCallback {
+class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private var googleMap: GoogleMap? = null
     private val perm = 5
@@ -31,32 +39,32 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment: SupportMapFragment? = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment?.getMapAsync(this)  //the map is loaded asynchronously
 
-    }
+        val fab = findViewById<FloatingActionButton>(R.id.fabFilter).setOnClickListener {
+            showDialogFilter()
+        }
 
-    // inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> Unit) { //manages and initialises fragments
-    //  val fragmentTransaction = beginTransaction()
-    //   fragmentTransaction.func()
-    //    fragmentTransaction.commit()
-    //  }
+    }
 
     override fun onMapReady(p0: GoogleMap?) {
         p0 ?: return
         googleMap = p0
-
-        googleMap?.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_custom))
-        //var b = googleMap?.setMapStyle(MapStyleOptions(getString(R.string.custom_look)))
-        //Log.i("Map", "map loading sucess: " + b.toString())
-
         googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(AACHEN, ZOOM_LEVEL)) //Zoom on Aachen
+
+        var b = googleMap?.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_custom))
+        Log.i("Map", "map loading sucess: " + b.toString())
 
         //  val circleDrawable = ContextCompat.getDrawable(this, R.drawable.ic_marker_bus)
         // val markerIcon = getMarkerIconFromDrawable(circleDrawable!!)
 
-        googleMap?.addMarker(MarkerOptions().position(AACHEN).snippet("Geschloseeeen. Dahaha!").title("Cassolette")) //MARKER, testing purposes in Aachen
+        var m1 = googleMap?.addMarker(MarkerOptions().position(AACHEN).snippet("Geschloseeeen. Dahaha!").title("Cassolette")) //MARKER, testing purposes in Aachen
+        m1?.tag = 0
 
         var ui = googleMap?.uiSettings
         ui?.isRotateGesturesEnabled = false
         ui?.isMapToolbarEnabled = false
+        googleMap?.setOnMarkerClickListener(this)
+
+        enableMyLocation() //location services
 
         // async(UI) {
         // var list: List<Bus.GPSData> = listOf()
@@ -74,11 +82,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // }
 
-        //}
-
-
-        enableMyLocation() //location services
     }
+
+
+    override fun onMarkerClick(p0: Marker?): Boolean {
+        var markerID = p0?.tag
+        // if(markerID != null){
+        BottomSheetDialog().setTitle("test0").show(this.supportFragmentManager, "test")
+        //  }
+        return false
+    }
+
 
     private fun enableMyLocation() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -92,10 +106,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    fun onMyLocationButtonClick(): Boolean {
-        //default behaviour
-        return false
-    }
 
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -109,6 +119,38 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             else -> {
             }
         }
+    }
+
+    private fun showDialogFilter() {
+        val v = LayoutInflater.from(applicationContext).inflate(R.layout.dialog_filter, null)
+        // val v = layoutInflaterAndroid.inflate (R.layout.dialog_filter);
+        val builderInfo = AlertDialog.Builder(this)
+
+        val btnClose = findViewById<ImageButton>(R.id.btn_close)?.setOnClickListener {
+            DialogInterface.OnClickListener { dialog, which -> dialog.cancel() }
+        }
+
+
+        //  builderInfo.setTitle(getString(app_name))
+        ///  builderInfo.setIcon(R.drawable.ic_pigmentv3)
+        //builderInfo.setMessage(getString(info1))
+
+        //     builderInfo.setPositiveButton(
+        //      getString(ok), DialogInterface.OnClickListener { dialog, which -> dialog.cancel() })
+///
+        //  builderInfo.setNeutralButton(
+        //          getString(website),
+        //         DialogInterface.OnClickListener { dialog, id ->
+        //        })
+
+        // ImageView appLogo = findViewById(R.id.applogo);
+        //  appLogo.setImageResource(R.drawable.ic_pigmentv3);
+
+        builderInfo.setView(v)
+        val alertDialog = builderInfo.create()
+        alertDialog.show()
+        val wlp = alertDialog.window.attributes
+        wlp.gravity = Gravity.TOP
     }
 
 

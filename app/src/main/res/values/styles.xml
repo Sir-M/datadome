@@ -17,4 +17,11 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="customTitle" parent="Base.DialogWindowTitle.AppCompat">
+        <item name="font">@font/title</item>
+    </style>
+    <style name="customText" parent="TextAppearance.AppCompat.Body1">
+        <item name="font">@font/serif</item>
+    </style>
+
 </resources>
