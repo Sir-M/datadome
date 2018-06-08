@@ -4,6 +4,8 @@ import android.Manifest
 import android.app.Dialog
 import android.content.pm.PackageManager
 import android.graphics.Rect
+import android.icu.util.Calendar
+import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.FloatingActionButton
@@ -28,26 +30,42 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import android.support.v7.app.AlertDialog
+import android.view.LayoutInflater
+import android.view.View
+import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.experimental.async
+import android.view.Window
+import android.widget.*
+import android.icu.util.*
+import android.widget.*
+import kotlinx.android.synthetic.main.dialog_filter.*
+import java.text.SimpleDateFormat
+import java.util.*
 
-
-class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+@Suppress("DEPRECATION")
+class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener, View.OnClickListener {
 
     private var googleMap: GoogleMap? = null
     private val perm = 5
     private val AACHEN = LatLng(50.77580397992759, 6.091018809604975)
     private val ZOOM_LEVEL = 14f
     private lateinit var bottomSheetDialog: BottomSheetBehavior<NestedScrollView>
-    private val enabledCategories = mapOf(1 to true, 2 to true, 3 to true, 4 to true, 5 to true)
+    private lateinit var locations: List<MapLocation>
+    private val enabledCategories = mutableMapOf(1 to true, 2 to true, 3 to true, 4 to true, 5 to true)
+    private var i = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.content_main)
-        this.test()
+
         val mapFragment: SupportMapFragment? = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment?.getMapAsync(this)  //the map is loaded asynchronously
 
         findViewById<FloatingActionButton>(R.id.fabFilter).setOnClickListener {
             showDialogFilter()
+
+
         }
 
         bottomSheetDialog = BottomSheetBehavior.from<NestedScrollView>(findViewById(R.id.bottom_sheet))
@@ -91,40 +109,24 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         ui?.isMapToolbarEnabled = false
         googleMap?.setOnMarkerClickListener(this)
 
+        val iterator = baseLocations.iterator()
+        i = 0
+        iterator.forEach { }
+
         enableMyLocation() //location services
 
-        // async(UI) {
-        // var list: List<Bus.GPSData> = listOf()
-        // val job = async(CommonPool) {
-        //    list = getAllGPSData()
-        //  }
-        //  job.await()
-        //  for (a in list) {
-        //     val latLng = LatLng(a.latitude, a.longitude)
-        //  Log.i("GPS1", "LAT: ${a.latitude}")
-        //googleMap?.addMarker(MarkerOptions().position(AACHEN).icon(markerIcon).title("BUSNUMMER: 17").snippet("Passagiere: 7")) //Hard-coded. Will be changed
-        //  Log.i("GPS1", "Marker set")
-        // }
     }
 
-    private fun test() {
-        val dat = mutableListOf<DateRange>()
-        val geo = GeoCoordinates(1.0, 2.0)
-        val katliste = mutableListOf<Short>(2)
-        val obj1 = MapLocation(334787, 2, geo, "hallo", "hallo1", "hallo1", dat, "dffi", 424523)
-        val obj2 = MapLocation(334787, 1, geo, "hallo", "hallo", "hallo", dat, "dffi", 424523)
-        val testliste = mutableListOf(obj1, obj2)
-
-        val listefertig = filterCategory(testliste, katliste)
-
-        val xy = listefertig[0]
-
-        Log.d("Main", "xy: " + xy.abstractText)
+    private fun drawOnMap(m: MapLocation) {
+        googleMap ?: return
+        val geoPos = LatLng(m.geo.lat, m.geo.lon)
+        googleMap?.addMarker(MarkerOptions().position(geoPos).title(m.title))
     }
 
     override fun onMarkerClick(p0: Marker?): Boolean {
         var markerID = p0?.tag
         // if(markerID != null){
+
         //  }
         val title = findViewById<TextView>(R.id.title)
         val abstract = findViewById<TextView>(R.id.abstractText)
@@ -203,9 +205,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
 
         val textDate = dialog.findViewById<TextView>(R.id.textView_date)
-        textDate.text = getString(R.string.date_today)
+        textDate.text = getString(R.string.date_all)
         val seekBar = dialog.findViewById<SeekBar>(R.id.seekBar)
-        seekBar.progress = 0
+        seekBar.progress = 4
 
         seekBar?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
@@ -220,6 +222,38 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             }
         })
 
+        val fabStage = dialog.findViewById<ImageButton>(R.id.fabStage)
+        fabStage.setOnClickListener(this)
+
+        val fabFood = dialog.findViewById<ImageButton>(R.id.fabFood)
+        fabFood.setOnClickListener(this)
+
+        val fabNight = dialog.findViewById<ImageButton>(R.id.fabNight)
+        fabNight.setOnClickListener(this)
+
+        val fabMuseum = dialog.findViewById<ImageButton>(R.id.fabMuseum)
+        fabMuseum.setOnClickListener(this)
+
+        val fabMusic = dialog.findViewById<ImageButton>(R.id.fabMusic)
+        fabMusic.setOnClickListener(this)
+
+        dialog.setOnDismissListener {
+            val hashliste = enabledCategories.toList()
+            val liste = mutableListOf<Short>()
+            for ((a, current) in hashliste.withIndex()) {
+                val value = current.second
+                if (value) {
+                    liste.add(a, current.first.toShort())
+                }
+            }
+            val speicher = getTimespans(seekBar.progress, baseLocations)
+            val speicher2 = filterCategory(speicher, liste)
+            for ((i, current2) in speicher2.withIndex()) {
+            //    drawOnMap(current2, i) toDo
+            }
+
+
+        }
 
         val wlp = dialog.window.attributes
         //  wlp.x = 150
@@ -228,29 +262,47 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         dialog.window.attributes = wlp
 
         Log.i("MainActivity", "btnClose: " + btnClose.toString())
-        //  builderInfo.setTitle(getString(app_name))
-        ///  builderInfo.setIcon(R.drawable.ic_pigmentv3)
-        //builderInfo.setMessage(getString(info1))
-
-        //     builderInfo.setPositiveButton(
-        //      getString(ok), DialogInterface.OnClickListener { dialog, which -> dialog.cancel() })
-///
-        //  builderInfo.setNeutralButton(
-        //          getString(website),
-        //         DialogInterface.OnClickListener { dialog, id ->
-        //        })
-
-        // ImageView appLogo = findViewById(R.id.applogo);
-        //  appLogo.setImageResource(R.drawable.ic_pigmentv3);
-
-
-        //builderInfo.setView(v)
-        // val alertDialog = builderInfo.create()
-        //  alertDialog.show()
-        // / val wlp = alertDialog.window.attributes
-        //   wlp.gravity = Gravity.TOP
         dialog.show()
     }
+
+    private fun getTimespans(p0: Int, liste: List<MapLocation>): List<MapLocation> {
+        val d = Date();
+        when (p0) {
+            0 -> {
+                return filterTime(liste, d, d)
+
+            }
+            1 -> {
+                val cur = Date()
+                ++cur.date
+
+                return filterTime(liste, cur, cur)
+
+            }
+            2 -> {
+                val cur = Date()
+                7 + cur.date
+
+                return filterTime(liste, d, cur)
+
+            }
+            3 -> {
+                val cur = Date()
+                ++cur.month
+                return filterTime(liste, d, cur)
+
+            }
+            4 -> {
+                val cur = Date()
+                10 + cur.year
+
+                return filterTime(liste, Date(), cur)
+
+            }
+        }
+        return emptyList()
+    }
+
 
     private fun getDateName(p0: Int): String {
         when (p0) {
@@ -271,6 +323,57 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             }
         }
         return ""
+    }
+
+    override fun onClick(v: View?) {
+        if (v?.id == R.id.fabStage) {
+            Log.i("onClick", "fabStage")
+            if (enabledCategories.getOrDefault(0, true)) {
+                v.findViewById<ImageButton>(R.id.fabStage).background = getDrawable(R.drawable.background_white)
+                enabledCategories.put(0, false)
+            } else {
+                Log.i("onClick", "fabStage false")
+                v.findViewById<ImageButton>(R.id.fabStage).background = getDrawable(R.drawable.background)
+                enabledCategories.put(0, true)
+            }
+
+        } else if (v?.id == R.id.fabFood) {
+            if (enabledCategories.getOrDefault(1, true)) {
+                v.findViewById<ImageButton>(R.id.fabFood).background = getDrawable(R.drawable.background_white)
+                enabledCategories.put(1, false)
+            } else {
+                v.findViewById<ImageButton>(R.id.fabFood).background = getDrawable(R.drawable.background)
+                enabledCategories.put(1, true)
+            }
+
+        } else if (v?.id == R.id.fabNight) {
+            if (enabledCategories.getOrDefault(2, true)) {
+                v.findViewById<ImageButton>(R.id.fabNight).background = getDrawable(R.drawable.background_white)
+                enabledCategories.put(2, false)
+            } else {
+                v.findViewById<ImageButton>(R.id.fabNight).background = getDrawable(R.drawable.background)
+                enabledCategories.put(2, true)
+            }
+
+        } else if (v?.id == R.id.fabMuseum) {
+            if (enabledCategories.getOrDefault(3, true)) {
+                v.findViewById<ImageButton>(R.id.fabMuseum).background = getDrawable(R.drawable.background_white)
+                enabledCategories.put(3, false)
+            } else {
+                v.findViewById<ImageButton>(R.id.fabMuseum).background = getDrawable(R.drawable.background)
+                enabledCategories.put(3, true)
+            }
+
+        } else if (v?.id == R.id.fabMusic) {
+            if (enabledCategories.getOrDefault(4, true)) {
+                v.findViewById<ImageButton>(R.id.fabMusic).background = getDrawable(R.drawable.background_white)
+                enabledCategories.put(4, false)
+            } else {
+                v.findViewById<ImageButton>(R.id.fabMusic).background = getDrawable(R.drawable.background)
+                enabledCategories.put(4, true)
+            }
+
+        }
     }
 }
 
