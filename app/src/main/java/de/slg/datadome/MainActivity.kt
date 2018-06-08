@@ -187,8 +187,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             for (current in hashliste) {
                 val value = current.second
                 if (value == true) {
-                    
-                    liste.add(a, current.first)
+
+                    liste.add(a, current.first.toShort())
                 }
                 a++
             }
