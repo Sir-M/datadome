@@ -19,9 +19,8 @@ import com.google.android.gms.maps.model.MarkerOptions
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
-
     private var googleMap: GoogleMap? = null
-    private val perm = 5;
+    private val perm = 5
     private val AACHEN = LatLng(50.77580397992759, 6.091018809604975)
     private val ZOOM_LEVEL = 14f
 
