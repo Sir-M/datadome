@@ -2,11 +2,7 @@ package de.slg.datadome
 
 import android.Manifest
 import android.app.Dialog
-import android.app.Fragment
 import android.content.pm.PackageManager
-import android.graphics.Rect
-import android.icu.util.Calendar
-import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.FloatingActionButton
@@ -16,10 +12,8 @@ import android.support.v4.widget.NestedScrollView
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Gravity
-import android.view.MotionEvent
-import android.view.ViewGroup
+import android.view.View
 import android.widget.ImageButton
-import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.core.view.doOnPreDraw
@@ -31,17 +25,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import android.support.v7.app.AlertDialog
-import android.view.LayoutInflater
-import android.view.View
-import kotlinx.coroutines.experimental.runBlocking
-import kotlinx.coroutines.experimental.async
-import android.view.Window
-import android.widget.*
-import android.icu.util.*
-import android.widget.*
-import kotlinx.android.synthetic.main.dialog_filter.*
-import java.text.SimpleDateFormat
 import java.util.*
 
 @Suppress("DEPRECATION")
@@ -65,33 +48,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         findViewById<FloatingActionButton>(R.id.fabFilter).setOnClickListener {
             showDialogFilter()
-
-
         }
-
-
 
         bottomSheetDialog = BottomSheetBehavior.from<NestedScrollView>(findViewById(R.id.bottom_sheet))
 
-        bottomSheetDialog
+        findViewById<ImageButton>(R.id.btn_close_2).setOnClickListener { bottomSheetDialog.state = BottomSheetBehavior.STATE_HIDDEN }
         bottomSheetDialog.state = BottomSheetBehavior.STATE_HIDDEN
 
-    }
-
-    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
-        if (ev?.action == MotionEvent.ACTION_DOWN) {
-            if (bottomSheetDialog.state != BottomSheetBehavior.STATE_HIDDEN) {
-                bottomSheetDialog.state = BottomSheetBehavior.STATE_HIDDEN
-
-                val outRect = Rect()
-                findViewById<NestedScrollView>(R.id.bottom_sheet).getGlobalVisibleRect(outRect)
-
-                if (!outRect.contains(ev.rawX.toInt(), ev.rawY.toInt()))
-                    bottomSheetDialog.state = BottomSheetBehavior.STATE_COLLAPSED
-
-            }
-        }
-        return super.dispatchTouchEvent(ev)
     }
 
     override fun onMapReady(p0: GoogleMap?) {
@@ -245,12 +208,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             val liste = mutableListOf<Short>()
             for ((a, current) in hashliste.withIndex()) {
                 val value = current.second
-<<<<<<< HEAD
-                if (value == true) {
-
-=======
                 if (value) {
->>>>>>> 9ac9588e1b348369b89d9287e2d598d328cb29a0
                     liste.add(a, current.first.toShort())
                 }
             }

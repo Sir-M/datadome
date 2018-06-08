@@ -40,14 +40,25 @@
         android:clipToPadding="true"
         android:elevation="20dp"
         app:behavior_hideable="true"
-        app:layout_behavior="de.slg.datadome.AdvancedBottomSheetBehaviour">
+        app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingRight="10dp"
             android:paddingLeft="10dp"
-            android:paddingTop="20dp">
+            android:paddingTop="10dp">
+
+            <ImageButton
+                android:id="@+id/btn_close_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:paddingEnd="5dp"
+                android:scaleType="fitCenter"
+                android:background="@null"
+                app:srcCompat="@drawable/places_ic_clear" />
 
             <TextView
                 android:id="@+id/title"
@@ -56,6 +67,7 @@
                 android:fontFamily="@font/title2_bold"
                 android:textColor="@android:color/black"
                 android:text="CASSOLETTE"
+                android:layout_marginTop="10dp"
                 android:textStyle="bold"
                 android:textSize="20sp" />
 
