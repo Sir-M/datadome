@@ -2,14 +2,24 @@ package de.slg.datadome
 
 import android.Manifest
 import android.app.Dialog
-import android.content.DialogInterface
 import android.content.pm.PackageManager
+import android.graphics.Rect
 import android.os.Bundle
+import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.FloatingActionButton
-import android.support.v4.app.*
+import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.support.v4.widget.NestedScrollView
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.Gravity
+import android.view.MotionEvent
+import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.LinearLayout
+import android.widget.SeekBar
+import android.widget.TextView
+import androidx.core.view.doOnPreDraw
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -18,17 +28,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import android.support.v7.app.AlertDialog
-import android.view.LayoutInflater
-import android.widget.ImageButton
-import android.view.Gravity
-import android.widget.Filter
-import kotlinx.coroutines.experimental.runBlocking
-import kotlinx.coroutines.experimental.async
-import android.view.Window
-import android.widget.SeekBar
-import android.widget.TextView
-import kotlinx.android.synthetic.main.dialog_filter.*
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
@@ -37,7 +36,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private val perm = 5
     private val AACHEN = LatLng(50.77580397992759, 6.091018809604975)
     private val ZOOM_LEVEL = 14f
-    private lateinit var locations: List<MapLocation>
+    private lateinit var bottomSheetDialog: BottomSheetBehavior<NestedScrollView>
     private val enabledCategories = mapOf(1 to true, 2 to true, 3 to true, 4 to true, 5 to true)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,9 +50,28 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             showDialogFilter()
         }
 
+        bottomSheetDialog = BottomSheetBehavior.from<NestedScrollView>(findViewById(R.id.bottom_sheet))
+
+        bottomSheetDialog
+        bottomSheetDialog.state = BottomSheetBehavior.STATE_HIDDEN
 
     }
 
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        if (ev?.action == MotionEvent.ACTION_DOWN) {
+            if (bottomSheetDialog.state != BottomSheetBehavior.STATE_HIDDEN) {
+                bottomSheetDialog.state = BottomSheetBehavior.STATE_HIDDEN
+
+                val outRect = Rect()
+                findViewById<NestedScrollView>(R.id.bottom_sheet).getGlobalVisibleRect(outRect)
+
+                if (!outRect.contains(ev.rawX.toInt(), ev.rawY.toInt()))
+                    bottomSheetDialog.state = BottomSheetBehavior.STATE_COLLAPSED
+
+            }
+        }
+        return super.dispatchTouchEvent(ev)
+    }
 
     override fun onMapReady(p0: GoogleMap?) {
         p0 ?: return
@@ -95,11 +113,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         val katliste = mutableListOf<Short>(2)
         val obj1 = MapLocation(334787, 2, geo, "hallo", "hallo1", "hallo1", dat, "dffi", 424523)
         val obj2 = MapLocation(334787, 1, geo, "hallo", "hallo", "hallo", dat, "dffi", 424523)
-        val testliste = mutableListOf<MapLocation>(obj1, obj2)
+        val testliste = mutableListOf(obj1, obj2)
 
         val listefertig = filterCategory(testliste, katliste)
 
-        val xy = listefertig.get(0)
+        val xy = listefertig[0]
 
         Log.d("Main", "xy: " + xy.abstractText)
     }
@@ -107,8 +125,42 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     override fun onMarkerClick(p0: Marker?): Boolean {
         var markerID = p0?.tag
         // if(markerID != null){
-        BottomSheetDialog().setTitle("test0").show(this.supportFragmentManager, "test")
         //  }
+        val title = findViewById<TextView>(R.id.title)
+        val abstract = findViewById<TextView>(R.id.abstractText)
+        val content = findViewById<TextView>(R.id.content)
+
+        abstract.setText("Das ist ein sehr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das dasdkajdands" +
+                "Das ist ein sehr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das dasdkajdands" +
+                "Das ist ein sehr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das dasdkajdands ")
+
+        content.setText("Das ist ein sehr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das dasdkajdands" +
+                "Das ist ein sehr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das dasdkajdands" +
+                "Das ist ein sehr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das dasdkajdands " +
+                "sehr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das dasdkajdands\" +\n" +
+                "                \"Das ist ein sehr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das dasdkajdands" +
+                "hr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das " +
+                "" +
+                "hr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das " +
+                "hr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das " +
+                "hr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das " +
+                "hr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das " +
+                "hr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das " +
+                "hr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das " +
+                "hr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das " +
+                "hr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das " +
+                "hr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das " +
+                "hr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das ")
+
+        var sumHeight = 100
+        title.doOnPreDraw {
+            sumHeight += title.measuredHeight
+            abstract.doOnPreDraw {
+                sumHeight += abstract.measuredHeight
+                bottomSheetDialog.peekHeight = sumHeight
+                bottomSheetDialog.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
+        }
         return false
     }
 
