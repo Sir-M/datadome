@@ -44,8 +44,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         p0 ?: return
         googleMap = p0
 
-        var b = googleMap?.setMapStyle(MapStyleOptions(getString(R.string.custom_look)))
-        Log.i("Map", "map loading sucess: " + b.toString())
+        googleMap?.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_custom))
+        //var b = googleMap?.setMapStyle(MapStyleOptions(getString(R.string.custom_look)))
+        //Log.i("Map", "map loading sucess: " + b.toString())
 
         googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(AACHEN, ZOOM_LEVEL)) //Zoom on Aachen
 
@@ -54,6 +55,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         googleMap?.addMarker(MarkerOptions().position(AACHEN).snippet("Geschloseeeen. Dahaha!").title("Cassolette")) //MARKER, testing purposes in Aachen
 
+        var ui = googleMap?.uiSettings
+        ui?.isRotateGesturesEnabled = false
+        ui?.isMapToolbarEnabled = false
 
         // async(UI) {
         // var list: List<Bus.GPSData> = listOf()
