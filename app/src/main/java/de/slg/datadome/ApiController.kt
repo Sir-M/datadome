@@ -3,12 +3,10 @@ package de.slg.datadome
 import android.util.Log
 import java.util.*
 
-const val IP = "http://172.26.210.84"
-const val PORT = 25565
+const val IP = "https://evening-badlands-73526.herokuapp.com/"
 
 fun getLocationList(): List<MapLocation> {
-    val response = khttp.get("$IP:$PORT")
-    Log.d("main", response.statusCode.toString())
+    val response = khttp.get(IP)
 
     val entries = response.jsonArray
     val articles = mutableListOf<MapLocation>()
@@ -18,8 +16,8 @@ fun getLocationList(): List<MapLocation> {
         val categories = mutableListOf<Int>()
 
         val array = json.getJSONArray("categoryIds")
-        (0 until array.length()).mapTo(categories) { array[it] as Int }
 
+        (0 until array.length()).mapTo(categories) { array[it].toString().toInt() }
         val dates = mutableListOf<DateRange>()
 
         val geoArray = json.getJSONObject("geo")
@@ -36,11 +34,10 @@ fun getLocationList(): List<MapLocation> {
                 json.getInt("postalCode")
         )
 
-        Log.d("ApiController", article.toString())
-
         articles.add(article)
-    }
 
+    }
+    Log.d("ApiController", articles.size.toString())
     return articles
 }
 
@@ -57,14 +54,14 @@ internal fun mapToUserCategory(categories: List<Int>): Short {
 }
 
 data class MapLocation constructor(val id: Long,
-                              val categoryId: Short,
-                              val geo: GeoCoordinates,
-                              val title: String,
-                              val abstractText: String,
-                              val article: String,
-                              val dates: List<DateRange>,
-                              val adress: String,
-                              val postalCode: Int
+                                   val categoryId: Short,
+                                   val geo: GeoCoordinates,
+                                   val title: String,
+                                   val abstractText: String,
+                                   val article: String,
+                                   val dates: List<DateRange>,
+                                   val adress: String,
+                                   val postalCode: Int
 )
 
 class GeoCoordinates constructor(val lat: Double, val lon: Double)

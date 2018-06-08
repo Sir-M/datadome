@@ -24,7 +24,7 @@
         <item name="font">@font/serif</item>
     </style>
 
-    <style name="StartTheme" parent="Theme.AppCompat.Light">
+    <style name="StartTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:background">@mipmap/klenkes_splash</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
     </style>
