@@ -77,14 +77,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         //    list = getAllGPSData()
         //  }
         //  job.await()
+        Log.i("GPS1", "Job done")
+
         //  for (a in list) {
         //     val latLng = LatLng(a.latitude, a.longitude)
         //  Log.i("GPS1", "LAT: ${a.latitude}")
         //googleMap?.addMarker(MarkerOptions().position(AACHEN).icon(markerIcon).title("BUSNUMMER: 17").snippet("Passagiere: 7")) //Hard-coded. Will be changed
         //  Log.i("GPS1", "Marker set")
+
         // }
+
         //}
-    }
 
 
     override fun onMarkerClick(p0: Marker?): Boolean {
@@ -94,6 +97,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         //  }
         return false
     }
+
 
 
     private fun enableMyLocation() {
