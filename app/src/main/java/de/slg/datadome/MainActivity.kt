@@ -13,6 +13,8 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.widget.NestedScrollView
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.CardView
+import android.text.Html
 import android.util.Log
 import android.view.Gravity
 import android.view.View
@@ -72,13 +74,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         ui?.isMapToolbarEnabled = false
         googleMap?.setOnMarkerClickListener(this)
 
-        val iterator = baseLocations.iterator()
         locations = baseLocations
-        i = 0
-        iterator.forEach { mapLocation: MapLocation ->
-            drawOnMap(mapLocation, i)
-            i++
-        }
+        filterList(4, enabledCategories)
 
         enableMyLocation() //location services
 
@@ -112,21 +109,25 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
             }
         }
-        val marker = googleMap?.addMarker(MarkerOptions().position(geoPos).title(m.title).icon(icon))
+        val marker = googleMap?.addMarker(MarkerOptions().position(geoPos).title(Html.fromHtml(m.title).toString()).icon(icon))
 
         marker?.tag = id
+
 
     }
 
     override fun onMarkerClick(p0: Marker?): Boolean {
-        var markerID = p0?.tag
-        // if(markerID != null){
+        val markerID = p0?.tag
+        Log.i("MARKER Type", markerID.toString())
+        val markedLoc = locations[markerID as Int]
 
-        //  }
         val title = findViewById<TextView>(R.id.title)
         val abstract = findViewById<TextView>(R.id.abstractText)
         val content = findViewById<TextView>(R.id.content)
 
+        title.text = Html.fromHtml(markedLoc.title)
+        abstract.text = Html.fromHtml(markedLoc.abstractText)
+        content.text = Html.fromHtml(markedLoc.article)
 
         var sumHeight = 100
         title.doOnPreDraw {
@@ -190,22 +191,20 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             }
         })
 
-        val fabStage = dialog.findViewById<ImageButton>(R.id.fabStage)
+        val fabStage = dialog.findViewById<CardView>(R.id.cardStage)
         fabStage.setOnClickListener(this)
-        val fabFood = dialog.findViewById<ImageButton>(R.id.fabFood)
+        val fabFood = dialog.findViewById<CardView>(R.id.cardFood)
         fabFood.setOnClickListener(this)
-        val fabNight = dialog.findViewById<ImageButton>(R.id.fabNight)
+        val fabNight = dialog.findViewById<CardView>(R.id.cardNight)
         fabNight.setOnClickListener(this)
-        val fabMuseum = dialog.findViewById<ImageButton>(R.id.fabMuseum)
+        val fabMuseum = dialog.findViewById<CardView>(R.id.cardMuseum)
         fabMuseum.setOnClickListener(this)
-        val fabMusic = dialog.findViewById<ImageButton>(R.id.fabMusic)
+        val fabMusic = dialog.findViewById<CardView>(R.id.cardMusic)
         fabMusic.setOnClickListener(this)
 
         dialog.setOnDismissListener {
-
             seekBarProgress = seekBar.progress
             filterList(seekBarProgress, enabledCategories)
-
         }
         val wlp = dialog.window.attributes
         wlp.gravity = Gravity.TOP
@@ -218,7 +217,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         val liste = mutableListOf<Short>()
         for ((a, current) in hashliste.withIndex()) {
             val value = current.second
-
             if (value) {
                 liste.add(a, current.first.toShort())
             }
@@ -230,6 +228,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             drawOnMap(current2, i)
 
         }
+        locations = speicher2
+
     }
 
     private fun getTimespans(p0: Int, liste: List<MapLocation>): List<MapLocation> {
@@ -242,13 +242,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 val cur = Date()
                 ++cur.date
                 return filterTime(liste, cur, cur)
-
             }
             2 -> {
                 val cur = Date()
                 7 + cur.date
                 return filterTime(liste, d, cur)
-
             }
             3 -> {
                 val cur = Date()
@@ -296,7 +294,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     override fun onClick(v: View?) {
         if (v?.id == R.id.fabStage) {
             Log.i("onClick", "fabStage")
-            if (enabledCategories.getOrDefault(0, true)) {
+            if (enabledCategories.getOrDefaultExtended(0, true)) {
                 v.findViewById<ImageButton>(R.id.fabStage).background = getDrawable(R.drawable.background_white)
                 enabledCategories.put(0, false)
             } else {
@@ -306,7 +304,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             }
 
         } else if (v?.id == R.id.fabFood) {
-            if (enabledCategories.getOrDefault(1, true)) {
+            if (enabledCategories.getOrDefaultExtended(1, true)) {
                 v.findViewById<ImageButton>(R.id.fabFood).background = getDrawable(R.drawable.background_white)
                 enabledCategories.put(1, false)
             } else {
@@ -315,7 +313,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             }
 
         } else if (v?.id == R.id.fabNight) {
-            if (enabledCategories.getOrDefault(2, true)) {
+            if (enabledCategories.getOrDefaultExtended(2, true)) {
                 v.findViewById<ImageButton>(R.id.fabNight).background = getDrawable(R.drawable.background_white)
                 enabledCategories.put(2, false)
             } else {
@@ -324,7 +322,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             }
 
         } else if (v?.id == R.id.fabMuseum) {
-            if (enabledCategories.getOrDefault(3, true)) {
+            if (enabledCategories.getOrDefaultExtended(3, true)) {
                 v.findViewById<ImageButton>(R.id.fabMuseum).background = getDrawable(R.drawable.background_white)
                 enabledCategories.put(3, false)
             } else {
@@ -333,7 +331,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             }
 
         } else if (v?.id == R.id.fabMusic) {
-            if (enabledCategories.getOrDefault(4, true)) {
+            if (enabledCategories.getOrDefaultExtended(4, true)) {
                 v.findViewById<ImageButton>(R.id.fabMusic).background = getDrawable(R.drawable.background_white)
                 enabledCategories.put(4, false)
             } else {
@@ -342,6 +340,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             }
 
         }
+    }
+
+    private fun MutableMap<Int, Boolean>.getOrDefaultExtended(index: Int, default: Boolean) : Boolean {
+        return this[index] ?: default
     }
 
     private fun getMarkerIconFromDrawable(drawable: Drawable): BitmapDescriptor {
