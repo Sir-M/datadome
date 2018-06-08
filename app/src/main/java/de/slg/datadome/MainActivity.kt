@@ -1,6 +1,7 @@
 package de.slg.datadome
 
 import android.Manifest
+import android.app.Dialog
 import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -36,7 +37,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.content_main)
-
+        this.test()
         val mapFragment: SupportMapFragment? = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment?.getMapAsync(this)  //the map is loaded asynchronously
 
@@ -44,7 +45,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             showDialogFilter()
         }
 
+
     }
+
 
     override fun onMapReady(p0: GoogleMap?) {
         p0 ?: return
@@ -85,6 +88,22 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     }
 
+    private fun test() {
+
+
+        val dat = mutableListOf<DateRange>()
+        val geo = GeoCoordinates(1.0, 2.0)
+        val katliste = mutableListOf<Short>(2)
+        val obj1 = MapLocation(334787, 2, geo, "hallo", "hallo1", "hallo1", dat, "dffi", 424523)
+        val obj2 = MapLocation(334787, 1, geo, "hallo", "hallo", "hallo", dat, "dffi", 424523)
+        val testliste = mutableListOf<MapLocation>(obj1, obj2)
+
+        val listefertig = filterCategory(testliste,katliste)
+
+        val xy = listefertig.get(0)
+
+        Log.d("Main","xy: "+xy.abstractText)
+    }
 
     override fun onMarkerClick(p0: Marker?): Boolean {
         var markerID = p0?.tag
@@ -108,7 +127,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     }
 
 
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
             perm -> {
@@ -123,15 +141,24 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     }
 
     private fun showDialogFilter() {
-        val v = LayoutInflater.from(applicationContext).inflate(R.layout.dialog_filter, null)
+        val dialog = Dialog(this)
+        //val v = LayoutInflater.from(applicationContext).inflate(R.layout.dialog_filter, null)
         // val v = layoutInflaterAndroid.inflate (R.layout.dialog_filter);
-        val builderInfo = AlertDialog.Builder(this)
+        dialog.setContentView(R.layout.dialog_filter)
+        // val builderInfo = AlertDialog.Builder(this)
 
-        val btnClose = findViewById<ImageButton>(R.id.btn_close)?.setOnClickListener {
-            DialogInterface.OnClickListener { dialog, which -> dialog.cancel() }
+        val btnClose = dialog.findViewById<ImageButton>(R.id.btn_close).setOnClickListener {
+            dialog.cancel()
         }
 
 
+        val wlp = dialog.window.attributes
+        //  wlp.x = 150
+        // wlp.y = 200
+        wlp.gravity = Gravity.TOP
+        dialog.window.attributes = wlp
+
+        Log.i("MainActivity", "btnClose: " + btnClose.toString())
         //  builderInfo.setTitle(getString(app_name))
         ///  builderInfo.setIcon(R.drawable.ic_pigmentv3)
         //builderInfo.setMessage(getString(info1))
@@ -147,12 +174,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         // ImageView appLogo = findViewById(R.id.applogo);
         //  appLogo.setImageResource(R.drawable.ic_pigmentv3);
 
-        builderInfo.setView(v)
-        val alertDialog = builderInfo.create()
-        alertDialog.show()
-        val wlp = alertDialog.window.attributes
-        wlp.gravity = Gravity.TOP
-    }
+
+        //builderInfo.setView(v)
+        // val alertDialog = builderInfo.create()
+        //  alertDialog.show()
+        // / val wlp = alertDialog.window.attributes
+        //   wlp.gravity = Gravity.TOP
+        dialog.show()
+    }}
 
 
-}
