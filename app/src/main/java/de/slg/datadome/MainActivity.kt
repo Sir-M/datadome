@@ -180,6 +180,28 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         val fabMusic = dialog.findViewById<ImageButton>(R.id.fabMusic)
         fabMusic.setOnClickListener(this)
 
+        dialog.setOnDismissListener {
+            val hashliste = enabledCategories.toList()
+            val liste = mutableListOf<Short>()
+            var a = 0;
+            for (current in hashliste) {
+                val value = current.second
+                if (value == true) {
+                    
+                    liste.add(a, current.first)
+                }
+                a++
+            }
+            val speicher = getTimespans(seekBar.progress, baseLocations)
+            val speicher2 = filterCategory(speicher, liste)
+            var i = 0;
+            for (current2 in speicher2) {
+                drawOnMap(current2, i)
+                i++
+            }
+
+
+        }
 
         val wlp = dialog.window.attributes
         //  wlp.x = 150
