@@ -23,9 +23,11 @@ import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.widget.ImageButton
 import android.view.Gravity
+import android.widget.Filter
 import kotlinx.coroutines.experimental.runBlocking
 import kotlinx.coroutines.experimental.async
 import android.view.Window
+
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
@@ -40,6 +42,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.content_main)
+        this.test()
+
 
         async {
             //
@@ -51,6 +55,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 }
                 locations = filterCategory(getLocationList(), filter)
             }
+
         }
 
         val mapFragment: SupportMapFragment? = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
@@ -60,7 +65,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             showDialogFilter()
         }
 
+
     }
+
 
     override fun onMapReady(p0: GoogleMap?) {
         p0 ?: return
@@ -101,6 +108,22 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     }
 
+    private fun test() {
+
+
+        val dat = mutableListOf<DateRange>()
+        val geo = GeoCoordinates(1.0, 2.0)
+        val katliste = mutableListOf<Short>(2)
+        val obj1 = MapLocation(334787, 2, geo, "hallo", "hallo1", "hallo1", dat, "dffi", 424523)
+        val obj2 = MapLocation(334787, 1, geo, "hallo", "hallo", "hallo", dat, "dffi", 424523)
+        val testliste = mutableListOf<MapLocation>(obj1, obj2)
+
+        val listefertig = filterCategory(testliste,katliste)
+
+        val xy = listefertig.get(0)
+
+        Log.d("Main","xy: "+xy.abstractText)
+    }
 
     override fun onMarkerClick(p0: Marker?): Boolean {
         var markerID = p0?.tag
@@ -171,13 +194,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         // ImageView appLogo = findViewById(R.id.applogo);
         //  appLogo.setImageResource(R.drawable.ic_pigmentv3);
 
+
         //builderInfo.setView(v)
         // val alertDialog = builderInfo.create()
         //  alertDialog.show()
         // / val wlp = alertDialog.window.attributes
         //   wlp.gravity = Gravity.TOP
         dialog.show()
-    }
+    }}
 
 
-}
