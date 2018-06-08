@@ -5,7 +5,7 @@
     <string name="datum">Datum: </string>
     <string name="date_today">Heute</string>
     <string name="date_tomorrow">Morgen</string>
-    <string name="date_week">In dieser Woche</string>
+    <string name="date_week">Diese Woche</string>
     <string name="date_month">Dieser Monat</string>
     <string name="date_all">Alle Veranstaltungen</string>
 

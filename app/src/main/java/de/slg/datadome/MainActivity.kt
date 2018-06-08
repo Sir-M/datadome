@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.icu.util.Calendar
+import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.*
@@ -22,9 +23,11 @@ import com.google.android.gms.maps.model.MarkerOptions
 import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.Gravity
+import android.view.View
 import kotlinx.coroutines.experimental.runBlocking
 import kotlinx.coroutines.experimental.async
 import android.view.Window
+import android.widget.*
 import android.icu.util.*
 import android.widget.*
 import kotlinx.android.synthetic.main.dialog_filter.*
@@ -32,14 +35,15 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 @Suppress("DEPRECATION")
-class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener, View.OnClickListener {
+
 
     private var googleMap: GoogleMap? = null
     private val perm = 5
     private val AACHEN = LatLng(50.77580397992759, 6.091018809604975)
     private val ZOOM_LEVEL = 14f
     private lateinit var locations: List<MapLocation>
-    private val enabledCategories = mapOf(1 to true, 2 to true, 3 to true, 4 to true, 5 to true)
+    private val enabledCategories = mutableMapOf(1 to true, 2 to true, 3 to true, 4 to true, 5 to true)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -132,14 +136,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         //  }
         return false
-
-
     }
-
-
-    /*  private fun fullBottomSheet() {
-          b = findViewById(R.i)
-      }*/
 
 
     private fun enableMyLocation() {
@@ -168,7 +165,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
     }
 
-
     private fun showDialogFilter() {
         val dialog = Dialog(this)
         //val v = LayoutInflater.from(applicationContext).inflate(R.layout.dialog_filter, null)
@@ -196,11 +192,22 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {
             }
-
         })
 
-        dialog.setOnDismissListener { if () }
+        val fabStage = dialog.findViewById<ImageButton>(R.id.fabStage)
+        fabStage.setOnClickListener(this)
 
+        val fabFood = dialog.findViewById<ImageButton>(R.id.fabFood)
+        fabFood.setOnClickListener(this)
+
+        val fabNight = dialog.findViewById<ImageButton>(R.id.fabNight)
+        fabNight.setOnClickListener(this)
+
+        val fabMuseum = dialog.findViewById<ImageButton>(R.id.fabMuseum)
+        fabMuseum.setOnClickListener(this)
+
+        val fabMusic = dialog.findViewById<ImageButton>(R.id.fabMusic)
+        fabMusic.setOnClickListener(this)
 
         val wlp = dialog.window.attributes
         //  wlp.x = 150
@@ -209,89 +216,80 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         dialog.window.attributes = wlp
 
         Log.i("MainActivity", "btnClose: " + btnClose.toString())
-        //  builderInfo.setTitle(getString(app_name))
-        ///  builderInfo.setIcon(R.drawable.ic_pigmentv3)
-        //builderInfo.setMessage(getString(info1))
-
-        //     builderInfo.setPositiveButton(
-        //      getString(ok), DialogInterface.OnClickListener { dialog, which -> dialog.cancel() })
-///
-        //  builderInfo.setNeutralButton(
-        //          getString(website),
-        //         DialogInterface.OnClickListener { dialog, id ->
-        //        })
-
-        // ImageView appLogo = findViewById(R.id.applogo);
-        //  appLogo.setImageResource(R.drawable.ic_pigmentv3);
-
-
-        //builderInfo.setView(v)
-        // val alertDialog = builderInfo.create()
-        //  alertDialog.show()
-        // / val wlp = alertDialog.window.attributes
-        //   wlp.gravity = Gravity.TOP
         dialog.show()
     }
 
-    private fun zwischenmethodeZeiten(p0: Int, liste: List<MapLocation>) {
-           val d = Date();
+    private fun getDateName(p0: Int): String {
         when (p0) {
             0 -> {
-                filterTime(liste, d, d)
-
+                return getString(R.string.date_today)
             }
             1 -> {
-                val cur = Date()
-                ++cur.date
-
-                filterTime(liste, cur, cur)
-
+                return getString(R.string.date_tomorrow)
             }
             2 -> {
-                val cur = Date()
-                7+cur.date
-
-                filterTime(liste, d, cur)
-
+                return getString(R.string.date_week)
             }
             3 -> {
-                val cur = Date()
-                ++cur.month
-                filterTime(liste, d, cur)
-
+                return getString(R.string.date_month)
             }
             4 -> {
-                val cur = Date()
-                10+cur.year
-
-                filterTime(liste, Date(), cur )
-
+                return getString(R.string.date_all)
             }
         }
+        return ""
     }
 
-}
+    override fun onClick(v: View?) {
+        if (v?.id == R.id.fabStage) {
+            Log.i("onClick", "fabStage")
+            if (enabledCategories.getOrDefault(0, true)) {
+                v.findViewById<ImageButton>(R.id.fabStage).background = getDrawable(R.drawable.background_white)
+                enabledCategories.put(0, false)
+            } else {
+                Log.i("onClick", "fabStage false")
+                v.findViewById<ImageButton>(R.id.fabStage).background = getDrawable(R.drawable.background)
+                enabledCategories.put(0, true)
+            }
 
+        } else if (v?.id == R.id.fabFood) {
+            if (enabledCategories.getOrDefault(1, true)) {
+                v.findViewById<ImageButton>(R.id.fabFood).background = getDrawable(R.drawable.background_white)
+                enabledCategories.put(1, false)
+            } else {
+                v.findViewById<ImageButton>(R.id.fabFood).background = getDrawable(R.drawable.background)
+                enabledCategories.put(1, true)
+            }
 
-private fun getDateName(p0: Int): String {
-    when (p0) {
-        0 -> {
-            return getString(R.string.date_today)
-        }
-        1 -> {
-            return getString(R.string.date_tomorrow)
-        }
-        2 -> {
-            return getString(R.string.date_week)
-        }
-        3 -> {
-            return getString(R.string.date_month)
-        }
-        4 -> {
-            return getString(R.string.date_all)
+        } else if (v?.id == R.id.fabNight) {
+            if (enabledCategories.getOrDefault(2, true)) {
+                v.findViewById<ImageButton>(R.id.fabNight).background = getDrawable(R.drawable.background_white)
+                enabledCategories.put(2, false)
+            } else {
+                v.findViewById<ImageButton>(R.id.fabNight).background = getDrawable(R.drawable.background)
+                enabledCategories.put(2, true)
+            }
+
+        } else if (v?.id == R.id.fabMuseum) {
+            if (enabledCategories.getOrDefault(3, true)) {
+                v.findViewById<ImageButton>(R.id.fabMuseum).background = getDrawable(R.drawable.background_white)
+                enabledCategories.put(3, false)
+            } else {
+                v.findViewById<ImageButton>(R.id.fabMuseum).background = getDrawable(R.drawable.background)
+                enabledCategories.put(3, true)
+            }
+
+        } else if (v?.id == R.id.fabMusic) {
+            if (enabledCategories.getOrDefault(4, true)) {
+                v.findViewById<ImageButton>(R.id.fabMusic).background = getDrawable(R.drawable.background_white)
+                enabledCategories.put(4, false)
+            } else {
+                v.findViewById<ImageButton>(R.id.fabMusic).background = getDrawable(R.drawable.background)
+                enabledCategories.put(4, true)
+            }
+
         }
     }
-    return ""
 }
 
 
