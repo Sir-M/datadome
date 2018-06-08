@@ -2,16 +2,26 @@ package de.slg.datadome
 
 import android.Manifest
 import android.app.Dialog
-import android.content.DialogInterface
 import android.content.pm.PackageManager
+import android.graphics.Rect
 import android.icu.util.Calendar
 import android.graphics.Color
 import android.os.Bundle
+import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.FloatingActionButton
-import android.support.v4.app.*
+import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.support.v4.widget.NestedScrollView
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.Gravity
+import android.view.MotionEvent
+import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.LinearLayout
+import android.widget.SeekBar
+import android.widget.TextView
+import androidx.core.view.doOnPreDraw
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -22,7 +32,6 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
-import android.view.Gravity
 import android.view.View
 import kotlinx.coroutines.experimental.runBlocking
 import kotlinx.coroutines.experimental.async
@@ -37,11 +46,11 @@ import java.util.*
 @Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener, View.OnClickListener {
 
-
     private var googleMap: GoogleMap? = null
     private val perm = 5
     private val AACHEN = LatLng(50.77580397992759, 6.091018809604975)
     private val ZOOM_LEVEL = 14f
+    private lateinit var bottomSheetDialog: BottomSheetBehavior<NestedScrollView>
     private lateinit var locations: List<MapLocation>
     private val enabledCategories = mutableMapOf(1 to true, 2 to true, 3 to true, 4 to true, 5 to true)
     private var i = 0
@@ -59,9 +68,28 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         }
 
+        bottomSheetDialog = BottomSheetBehavior.from<NestedScrollView>(findViewById(R.id.bottom_sheet))
+
+        bottomSheetDialog
+        bottomSheetDialog.state = BottomSheetBehavior.STATE_HIDDEN
 
     }
 
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        if (ev?.action == MotionEvent.ACTION_DOWN) {
+            if (bottomSheetDialog.state != BottomSheetBehavior.STATE_HIDDEN) {
+                bottomSheetDialog.state = BottomSheetBehavior.STATE_HIDDEN
+
+                val outRect = Rect()
+                findViewById<NestedScrollView>(R.id.bottom_sheet).getGlobalVisibleRect(outRect)
+
+                if (!outRect.contains(ev.rawX.toInt(), ev.rawY.toInt()))
+                    bottomSheetDialog.state = BottomSheetBehavior.STATE_COLLAPSED
+
+            }
+        }
+        return super.dispatchTouchEvent(ev)
+    }
 
     override fun onMapReady(p0: GoogleMap?) {
         p0 ?: return
@@ -89,7 +117,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     }
 
-
     private fun drawOnMap(m: MapLocation) {
         googleMap ?: return
         val geoPos = LatLng(m.geo.lat, m.geo.lon)
@@ -100,12 +127,42 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         var markerID = p0?.tag
         // if(markerID != null){
 
-
-        var b = BottomSheetDialog()
-        b.setTitle("test0")
-        b.show(this.supportFragmentManager, "test")
-
         //  }
+        val title = findViewById<TextView>(R.id.title)
+        val abstract = findViewById<TextView>(R.id.abstractText)
+        val content = findViewById<TextView>(R.id.content)
+
+        abstract.setText("Das ist ein sehr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das dasdkajdands" +
+                "Das ist ein sehr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das dasdkajdands" +
+                "Das ist ein sehr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das dasdkajdands ")
+
+        content.setText("Das ist ein sehr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das dasdkajdands" +
+                "Das ist ein sehr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das dasdkajdands" +
+                "Das ist ein sehr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das dasdkajdands " +
+                "sehr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das dasdkajdands\" +\n" +
+                "                \"Das ist ein sehr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das dasdkajdands" +
+                "hr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das " +
+                "" +
+                "hr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das " +
+                "hr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das " +
+                "hr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das " +
+                "hr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das " +
+                "hr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das " +
+                "hr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das " +
+                "hr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das " +
+                "hr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das " +
+                "hr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das " +
+                "hr langer text, der über mehrere Zeilen geht ez nadknajkdlkd adaksda das ")
+
+        var sumHeight = 100
+        title.doOnPreDraw {
+            sumHeight += title.measuredHeight
+            abstract.doOnPreDraw {
+                sumHeight += abstract.measuredHeight
+                bottomSheetDialog.peekHeight = sumHeight
+                bottomSheetDialog.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
+        }
         return false
     }
 
@@ -183,21 +240,21 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         dialog.setOnDismissListener {
             val hashliste = enabledCategories.toList()
             val liste = mutableListOf<Short>()
-            var a = 0;
-            for (current in hashliste) {
+            for ((a, current) in hashliste.withIndex()) {
                 val value = current.second
+<<<<<<< HEAD
                 if (value == true) {
 
+=======
+                if (value) {
+>>>>>>> 9ac9588e1b348369b89d9287e2d598d328cb29a0
                     liste.add(a, current.first.toShort())
                 }
-                a++
             }
             val speicher = getTimespans(seekBar.progress, baseLocations)
             val speicher2 = filterCategory(speicher, liste)
-            var i = 0;
-            for (current2 in speicher2) {
-                drawOnMap(current2, i)
-                i++
+            for ((i, current2) in speicher2.withIndex()) {
+            //    drawOnMap(current2, i) toDo
             }
 
 
