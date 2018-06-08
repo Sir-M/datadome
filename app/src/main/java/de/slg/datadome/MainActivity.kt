@@ -25,10 +25,6 @@ import android.view.WindowManager
 import android.view.Gravity
 
 
-
-
-
-
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
 
@@ -87,7 +83,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         // }
 
-        //}
+    }
 
 
     override fun onMarkerClick(p0: Marker?): Boolean {
@@ -97,7 +93,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         //  }
         return false
     }
-
 
 
     private fun enableMyLocation() {
@@ -140,12 +135,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         ///  builderInfo.setIcon(R.drawable.ic_pigmentv3)
         //builderInfo.setMessage(getString(info1))
 
-   //     builderInfo.setPositiveButton(
-          //      getString(ok), DialogInterface.OnClickListener { dialog, which -> dialog.cancel() })
+        //     builderInfo.setPositiveButton(
+        //      getString(ok), DialogInterface.OnClickListener { dialog, which -> dialog.cancel() })
 ///
-      //  builderInfo.setNeutralButton(
-      //          getString(website),
-       //         DialogInterface.OnClickListener { dialog, id ->
+        //  builderInfo.setNeutralButton(
+        //          getString(website),
+        //         DialogInterface.OnClickListener { dialog, id ->
         //        })
 
         // ImageView appLogo = findViewById(R.id.applogo);
