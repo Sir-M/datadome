@@ -1,5 +1,6 @@
 package de.slg.datadome
 
+import android.util.Log
 import java.util.*
 
 const val IP = "http://172.26.210.84"
@@ -7,6 +8,8 @@ const val PORT = 25565
 
 fun getLocationList(): List<MapLocation> {
     val response = khttp.get("$IP:$PORT")
+    Log.d("main", response.statusCode.toString())
+
     val entries = response.jsonArray
     val articles = mutableListOf<MapLocation>()
 
@@ -18,6 +21,7 @@ fun getLocationList(): List<MapLocation> {
         (0 until array.length()).mapTo(categories) { array[it] as Int }
 
         val dates = mutableListOf<DateRange>()
+
         val geoArray = json.getJSONObject("geo")
         val geo = GeoCoordinates(geoArray.getDouble("lat"), geoArray.getDouble("lon"))
         val article = MapLocation(
@@ -31,6 +35,9 @@ fun getLocationList(): List<MapLocation> {
                 json.getString("address"),
                 json.getInt("postalCode")
         )
+
+        Log.d("ApiController", article.toString())
+
         articles.add(article)
     }
 
@@ -49,7 +56,7 @@ internal fun mapToUserCategory(categories: List<Int>): Short {
     }
 }
 
-class MapLocation constructor(val id: Long,
+data class MapLocation constructor(val id: Long,
                               val categoryId: Short,
                               val geo: GeoCoordinates,
                               val title: String,

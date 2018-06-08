@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.compat.R.id.async
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.*
 import android.support.v4.content.ContextCompat
@@ -22,8 +21,6 @@ import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.widget.ImageButton
 import android.view.Gravity
-import kotlinx.coroutines.experimental.runBlocking
-import kotlinx.coroutines.experimental.async
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
@@ -32,24 +29,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private val perm = 5
     private val AACHEN = LatLng(50.77580397992759, 6.091018809604975)
     private val ZOOM_LEVEL = 14f
+
     private lateinit var locations: List<MapLocation>
-    private val enabledCategories = mapOf(0 to true, 1 to true, 2 to true, 3 to true, 4 to true)
+    private val enabledCategories = mapOf(1 to true, 2 to true, 3 to true, 4 to true, 5 to true)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.content_main)
-
-        async {
-            //
-            runBlocking {
-                val filter = mutableListOf<Short>()
-                for ((key, value) in enabledCategories) {
-                    if (value)
-                        filter.add(key.toShort())
-                }
-                locations = filterCategory(getLocationList(), filter)
-            }
-        }
 
         val mapFragment: SupportMapFragment? = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment?.getMapAsync(this)  //the map is loaded asynchronously
