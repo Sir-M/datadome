@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private val ZOOM_LEVEL = 14f
     private lateinit var locations: List<MapLocation>
     private val enabledCategories = mutableMapOf(1 to true, 2 to true, 3 to true, 4 to true, 5 to true)
+    private var i = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,50 +81,20 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         ui?.isMapToolbarEnabled = false
         googleMap?.setOnMarkerClickListener(this)
 
+        val iterator = baseLocations.iterator()
+        i = 0
+        iterator.forEach { }
+
         enableMyLocation() //location services
 
-        // async(UI) {
-        // var list: List<Bus.GPSData> = listOf()
-        // val job = async(CommonPool) {
-        //    list = getAllGPSData()
-        //  }
-        //  job.await()
-        //  for (a in list) {
-        //     val latLng = LatLng(a.latitude, a.longitude)
-        //  Log.i("GPS1", "LAT: ${a.latitude}")
-        //googleMap?.addMarker(MarkerOptions().position(AACHEN).icon(markerIcon).title("BUSNUMMER: 17").snippet("Passagiere: 7")) //Hard-coded. Will be changed
-        //  Log.i("GPS1", "Marker set")
-        // }
     }
 
 
-    /*   private fun test() {
-
-
-           val dat = mutableListOf<DateRange>()
-           val geo = GeoCoordinates(1.0, 2.0)
-           val katliste = mutableListOf<Short>(2)
-           val obj1 = MapLocation(334787, 2, geo, "hallo", "hallo1", "hallo1", dat, "dffi", 424523)
-           val obj2 = MapLocation(334787, 1, geo, "hallo", "hallo", "hallo", dat, "dffi", 424523)
-           val testliste = mutableListOf<MapLocation>(obj1, obj2)
-
-           val listefertig = filterCategory(testliste,katliste)
-=======
-    private fun test() {
-        val dat = mutableListOf<DateRange>()
-        val geo = GeoCoordinates(1.0, 2.0)
-        val katliste = mutableListOf<Short>(2)
-        val obj1 = MapLocation(334787, 2, geo, "hallo", "hallo1", "hallo1", dat, "dffi", 424523)
-        val obj2 = MapLocation(334787, 1, geo, "hallo", "hallo", "hallo", dat, "dffi", 424523)
-        val testliste = mutableListOf<MapLocation>(obj1, obj2)
-
-        val listefertig = filterCategory(testliste, katliste)
->>>>>>> c59968da3e677cdb936e9a8b03cdfdecd4bc258d
-
-           val xy = listefertig.get(0)
-
-           Log.d("Main","xy: "+xy.abstractText)*/
-
+    private fun drawOnMap(m: MapLocation) {
+        googleMap ?: return
+        val geoPos = LatLng(m.geo.lat, m.geo.lon)
+        googleMap?.addMarker(MarkerOptions().position(geoPos).title(m.title))
+    }
 
     override fun onMarkerClick(p0: Marker?): Boolean {
         var markerID = p0?.tag
@@ -177,9 +148,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
 
         val textDate = dialog.findViewById<TextView>(R.id.textView_date)
-        textDate.text = getString(R.string.date_today)
+        textDate.text = getString(R.string.date_all)
         val seekBar = dialog.findViewById<SeekBar>(R.id.seekBar)
-        seekBar.progress = 0
+        seekBar.progress = 4
 
         seekBar?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
@@ -209,6 +180,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         val fabMusic = dialog.findViewById<ImageButton>(R.id.fabMusic)
         fabMusic.setOnClickListener(this)
 
+
         val wlp = dialog.window.attributes
         //  wlp.x = 150
         // wlp.y = 200
@@ -218,6 +190,45 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         Log.i("MainActivity", "btnClose: " + btnClose.toString())
         dialog.show()
     }
+
+    private fun getTimespans(p0: Int, liste: List<MapLocation>): List<MapLocation> {
+        val d = Date();
+        when (p0) {
+            0 -> {
+                return filterTime(liste, d, d)
+
+            }
+            1 -> {
+                val cur = Date()
+                ++cur.date
+
+                return filterTime(liste, cur, cur)
+
+            }
+            2 -> {
+                val cur = Date()
+                7 + cur.date
+
+                return filterTime(liste, d, cur)
+
+            }
+            3 -> {
+                val cur = Date()
+                ++cur.month
+                return filterTime(liste, d, cur)
+
+            }
+            4 -> {
+                val cur = Date()
+                10 + cur.year
+
+                return filterTime(liste, Date(), cur)
+
+            }
+        }
+        return emptyList()
+    }
+
 
     private fun getDateName(p0: Int): String {
         when (p0) {
