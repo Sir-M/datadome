@@ -72,7 +72,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:tag="1"
-                app:srcCompat="@drawable/ic_theater" />
+                app:srcCompat="@drawable/ic_outline_theater" />
 
             <TextView
                 android:id="@+id/textViewStage"
