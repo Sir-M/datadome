@@ -2,6 +2,7 @@ package de.slg.datadome
 
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Contacts
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import kotlinx.coroutines.experimental.CommonPool
@@ -19,7 +20,7 @@ class Start : AppCompatActivity() {
         async(UI) {
             try {
                 val job = async(CommonPool) {
-                    baseLocations = getLocationList()
+                    //        baseLocations = getLocationList()
                 }
                 job.await()
                 startActivity(Intent(this@Start, MainActivity::class.java))

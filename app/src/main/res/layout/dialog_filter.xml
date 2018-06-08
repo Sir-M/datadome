@@ -10,8 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignTop="@+id/textView_title_filter"
-        android:layout_marginEnd="12dp"
-        android:layout_marginRight="12dp"
+        android:layout_marginRight="18dp"
         android:background="@null"
         app:srcCompat="@drawable/places_ic_clear" />
 
@@ -22,7 +21,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:fontFamily="@font/title2_bold"
-        android:text="Ergebnisse filtern"
+        android:text="@string/filter"
         android:textColor="#333333"
         android:textSize="17sp" />
 
@@ -46,44 +45,42 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="13dp"
         android:fontFamily="@font/title2"
-        android:text="Datum: "
+        android:text="@string/date_today"
         android:textColor="#333333"
         android:textSize="16dp" />
 
     <android.support.v7.widget.CardView
         android:id="@+id/cardStage"
         android:layout_width="350dp"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="143dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
-            <android.support.design.widget.FloatingActionButton
+            <ImageButton
                 android:id="@+id/fabStage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="25dp"
+                android:background="@null"
                 android:clickable="true"
                 android:focusable="true"
-                app:fabCustomSize="40dp"
-
-                app:fabSize="normal"
-                app:srcCompat="@drawable/places_ic_clear" />
+                app:srcCompat="@drawable/ic_theater" />
 
             <TextView
                 android:id="@+id/textViewStage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="35dp"
                 android:layout_toEndOf="@id/fabStage"
                 android:fontFamily="@font/title2"
-                android:text="Bühne"
+                android:text="@string/stage"
                 android:textColor="#333333"
                 android:textSize="18sp" />
 
@@ -95,35 +92,35 @@
     <android.support.v7.widget.CardView
         android:id="@+id/cardFood"
         android:layout_width="350dp"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:layout_below="@+id/cardStage"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
-            <android.support.design.widget.FloatingActionButton
+            <ImageButton
                 android:id="@+id/fabFood"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="25dp"
+                android:background="@null"
                 android:clickable="true"
                 android:focusable="true"
-                app:fabSize="normal"
-                app:srcCompat="@drawable/places_ic_clear" />
+                app:srcCompat="@drawable/ic_outline_restaurant_24px" />
 
             <TextView
                 android:id="@+id/textViewFood"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="35dp"
                 android:layout_toEndOf="@id/fabFood"
                 android:fontFamily="@font/title2"
-                android:text="Essen&amp;Trinken"
+                android:text="@string/food"
                 android:textColor="#333333"
                 android:textSize="18sp" />
 
@@ -133,35 +130,35 @@
     <android.support.v7.widget.CardView
         android:id="@+id/cardNight"
         android:layout_width="350dp"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:layout_below="@+id/cardFood"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
-            <android.support.design.widget.FloatingActionButton
+            <ImageButton
                 android:id="@+id/fabNight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="25dp"
+                android:background="@null"
                 android:clickable="true"
                 android:focusable="true"
-                app:fabSize="normal"
-                app:srcCompat="@drawable/places_ic_clear" />
+                app:srcCompat="@drawable/ic_outline_local_bar_24px" />
 
             <TextView
                 android:id="@+id/textViewNight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="35dp"
                 android:layout_toEndOf="@id/fabNight"
                 android:fontFamily="@font/title2"
-                android:text="Ausgehen"
+                android:text="@string/night"
                 android:textColor="#333333"
                 android:textSize="18sp" />
 
@@ -172,35 +169,35 @@
     <android.support.v7.widget.CardView
         android:id="@+id/cardMuseum"
         android:layout_width="350dp"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:layout_below="@+id/cardNight"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
-            <android.support.design.widget.FloatingActionButton
+            <ImageButton
                 android:id="@+id/fabMuseum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="25dp"
+                android:background="@null"
                 android:clickable="true"
                 android:focusable="true"
-                app:fabSize="normal"
-                app:srcCompat="@drawable/places_ic_clear" />
+                app:srcCompat="@drawable/ic_outline_account_balance_24px" />
 
             <TextView
                 android:id="@+id/textViewMuseum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="35dp"
                 android:layout_toEndOf="@id/fabMuseum"
                 android:fontFamily="@font/title2"
-                android:text="Museen"
+                android:text="@string/museum"
                 android:textColor="#333333"
                 android:textSize="18sp" />
 
@@ -210,35 +207,36 @@
     <android.support.v7.widget.CardView
         android:id="@+id/cardMusic"
         android:layout_width="350dp"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:layout_below="@+id/cardMuseum"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="15dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
-            <android.support.design.widget.FloatingActionButton
+            <ImageButton
                 android:id="@+id/fabMusic"
+                android:background="@null"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="25dp"
                 android:clickable="true"
                 android:focusable="true"
-                app:fabSize="normal"
-                app:srcCompat="@drawable/places_ic_clear" />
+                app:srcCompat="@drawable/ic_outline_music_note_24px" />
 
             <TextView
                 android:id="@+id/textViewMusic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="35dp"
                 android:layout_toEndOf="@id/fabMusic"
                 android:fontFamily="@font/title2"
-                android:text="Konzert"
+                android:text="@string/music"
                 android:textColor="#333333"
                 android:textSize="18sp" />
 

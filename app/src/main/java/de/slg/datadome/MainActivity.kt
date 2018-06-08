@@ -22,6 +22,13 @@ import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.widget.ImageButton
 import android.view.Gravity
+import android.widget.Filter
+import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.experimental.async
+import android.view.Window
+import android.widget.SeekBar
+import android.widget.TextView
+import kotlinx.android.synthetic.main.dialog_filter.*
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
@@ -30,7 +37,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private val perm = 5
     private val AACHEN = LatLng(50.77580397992759, 6.091018809604975)
     private val ZOOM_LEVEL = 14f
-
     private lateinit var locations: List<MapLocation>
     private val enabledCategories = mapOf(1 to true, 2 to true, 3 to true, 4 to true, 5 to true)
 
@@ -41,7 +47,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         val mapFragment: SupportMapFragment? = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment?.getMapAsync(this)  //the map is loaded asynchronously
 
-        val fab = findViewById<FloatingActionButton>(R.id.fabFilter).setOnClickListener {
+        findViewById<FloatingActionButton>(R.id.fabFilter).setOnClickListener {
             showDialogFilter()
         }
 
@@ -56,7 +62,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         val b = googleMap?.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_custom))
         Log.i("Map", "map loading sucess: " + b.toString())
-
         //  val circleDrawable = ContextCompat.getDrawable(this, R.drawable.ic_marker_bus)
         // val markerIcon = getMarkerIconFromDrawable(circleDrawable!!)
 
@@ -76,21 +81,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         //    list = getAllGPSData()
         //  }
         //  job.await()
-        Log.i("GPS1", "Job done")
-
         //  for (a in list) {
         //     val latLng = LatLng(a.latitude, a.longitude)
         //  Log.i("GPS1", "LAT: ${a.latitude}")
         //googleMap?.addMarker(MarkerOptions().position(AACHEN).icon(markerIcon).title("BUSNUMMER: 17").snippet("Passagiere: 7")) //Hard-coded. Will be changed
         //  Log.i("GPS1", "Marker set")
-
         // }
-
     }
 
     private fun test() {
-
-
         val dat = mutableListOf<DateRange>()
         val geo = GeoCoordinates(1.0, 2.0)
         val katliste = mutableListOf<Short>(2)
@@ -98,11 +97,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         val obj2 = MapLocation(334787, 1, geo, "hallo", "hallo", "hallo", dat, "dffi", 424523)
         val testliste = mutableListOf<MapLocation>(obj1, obj2)
 
-        val listefertig = filterCategory(testliste,katliste)
+        val listefertig = filterCategory(testliste, katliste)
 
         val xy = listefertig.get(0)
 
-        Log.d("Main","xy: "+xy.abstractText)
+        Log.d("Main", "xy: " + xy.abstractText)
     }
 
     override fun onMarkerClick(p0: Marker?): Boolean {
@@ -151,6 +150,24 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             dialog.cancel()
         }
 
+        val textDate = dialog.findViewById<TextView>(R.id.textView_date)
+        textDate.text = getString(R.string.date_today)
+        val seekBar = dialog.findViewById<SeekBar>(R.id.seekBar)
+        seekBar.progress = 0
+
+        seekBar?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                textDate.text = getDateName(progress)
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar) {
+                // Write code to perform some action when touch is started.
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+            }
+        })
+
 
         val wlp = dialog.window.attributes
         //  wlp.x = 150
@@ -181,6 +198,28 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         // / val wlp = alertDialog.window.attributes
         //   wlp.gravity = Gravity.TOP
         dialog.show()
-    }}
+    }
+
+    private fun getDateName(p0: Int): String {
+        when (p0) {
+            0 -> {
+                return getString(R.string.date_today)
+            }
+            1 -> {
+                return getString(R.string.date_tomorrow)
+            }
+            2 -> {
+                return getString(R.string.date_week)
+            }
+            3 -> {
+                return getString(R.string.date_month)
+            }
+            4 -> {
+                return getString(R.string.date_all)
+            }
+        }
+        return ""
+    }
+}
 
 
