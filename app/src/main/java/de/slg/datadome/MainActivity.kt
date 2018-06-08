@@ -98,6 +98,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         return false
     }
 
+   /* private fun test()
+    {
+
+        obj1 = new
+
+
+
+      val testliste:  List<MapLocation>  = Filter.filterCategory(List<Article> articleList, List<Short> category)
+
+    }*/
+
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
