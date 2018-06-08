@@ -2,6 +2,7 @@ package de.slg.datadome
 
 import android.Manifest
 import android.app.Dialog
+import android.app.Fragment
 import android.content.pm.PackageManager
 import android.graphics.Rect
 import android.icu.util.Calendar
@@ -67,6 +68,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
 
         }
+
+
 
         bottomSheetDialog = BottomSheetBehavior.from<NestedScrollView>(findViewById(R.id.bottom_sheet))
 

@@ -24,7 +24,7 @@ fun getLocationList(): List<MapLocation> {
         val geo = GeoCoordinates(geoArray.getDouble("lat"), geoArray.getDouble("lon"))
         val article = MapLocation(
                 json.getLong("id"),
-                mapToUserCategory(categories),
+                mapToUserCategory(categories).toShort(),
                 geo,
                 json.getString("title"),
                 json.getString("abstractText"),
@@ -41,16 +41,13 @@ fun getLocationList(): List<MapLocation> {
     return articles
 }
 
-internal fun mapToUserCategory(categories: List<Int>): Short {
-    val oldId = categories[0]
-    return when (oldId) {
-        41, 25 -> 1
-        61 -> 2
-        60, 63 -> 3
-        71 -> 4
-        26, 38 -> 5
-        else -> 1
-    }
+internal fun mapToUserCategory(categories: List<Int>): Int {
+    return if (41 in categories || 25 in categories) 1
+    else if (61 in categories) 2
+    else if (60 in categories || 63 in categories) 3
+    else if (71 in categories) 4
+    else if (26 in categories || 38 in categories) 5
+    else 1
 }
 
 data class MapLocation constructor(val id: Long,
