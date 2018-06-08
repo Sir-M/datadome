@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.content_main)
+        this.test()
 
 
         async {
@@ -61,7 +62,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         val fab = findViewById<FloatingActionButton>(R.id.fabFilter).setOnClickListener {
             showDialogFilter()
         }
-       this.test()
+
 
     }
 
