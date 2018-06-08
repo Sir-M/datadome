@@ -21,8 +21,8 @@ import com.google.android.gms.maps.model.MarkerOptions
 import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.widget.ImageButton
-import android.view.WindowManager
 import android.view.Gravity
+import kotlinx.coroutines.experimental.runBlocking
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
@@ -31,10 +31,16 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private val perm = 5
     private val AACHEN = LatLng(50.77580397992759, 6.091018809604975)
     private val ZOOM_LEVEL = 14f
+    private lateinit var locations: List<MapLocation>
+    private val enabledCategories = mapOf(0 to true, 1 to true, 2 to true, 3 to true, 4 to true)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.content_main)
+
+        runBlocking {
+       //     locations = Filter.filterCategory(getArticleList(), enabledCategories.map{})
+        }
 
         val mapFragment: SupportMapFragment? = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment?.getMapAsync(this)  //the map is loaded asynchronously
@@ -50,16 +56,16 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         googleMap = p0
         googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(AACHEN, ZOOM_LEVEL)) //Zoom on Aachen
 
-        var b = googleMap?.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_custom))
+        val b = googleMap?.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_custom))
         Log.i("Map", "map loading sucess: " + b.toString())
 
         //  val circleDrawable = ContextCompat.getDrawable(this, R.drawable.ic_marker_bus)
         // val markerIcon = getMarkerIconFromDrawable(circleDrawable!!)
 
-        var m1 = googleMap?.addMarker(MarkerOptions().position(AACHEN).snippet("Geschloseeeen. Dahaha!").title("Cassolette")) //MARKER, testing purposes in Aachen
+        val m1 = googleMap?.addMarker(MarkerOptions().position(AACHEN).snippet("Geschloseeeen. Dahaha!").title("Cassolette")) //MARKER, testing purposes in Aachen
         m1?.tag = 0
 
-        var ui = googleMap?.uiSettings
+        val ui = googleMap?.uiSettings
         ui?.isRotateGesturesEnabled = false
         ui?.isMapToolbarEnabled = false
         googleMap?.setOnMarkerClickListener(this)
