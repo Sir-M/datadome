@@ -5,25 +5,25 @@ import java.util.ListIterator;
 
 public class Filter {
 
-    public List<Article> filtern (List<Article> listedatenbank, List<Short> kategorie)
+    public List<Article> filtern (List<Article> articleList, List<Short> category)
     {
-        List<Article> gefilterteListe = null;
-        int a = kategorie.size();
-        int i = listedatenbank.size();
+        List<Article> filtertList = null;
+        int numbersOfCategories = category.size();
+        int i = articleList.size();
         while (i>0)
         {
-            Article ding1 = listedatenbank.get(i);
-            List<Short> kategorienDinge = ding1.getCategoryIds();
-            int b = kategorienDinge.size();
+            Article current = articleList.get(i);
+            List<Short> currentCategories = current.getCategoryIds();
+            int b = currentCategories.size();
 
-            while (a>0)
+            while (numbersOfCategories>0)
             {
                 while(b>0)
                 {
-                    if (kategorie.get(a).equals(kategorienDinge.get(b)))
+                    if (category.get(numbersOfCategories).equals(currentCategories.get(b)))
                     {
-                      if (!ding1.getAbstractText().equals(""))
-                      {gefilterteListe.add(ding1);}
+                      if (!current.getAbstractText().equals(""))
+                      {filtertList.add(current);}
                     }
                 }
             }
@@ -31,6 +31,6 @@ public class Filter {
             i--;
         }
 
-        return gefilterteListe;
+        return filtertList;
     }
 }
