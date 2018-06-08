@@ -22,7 +22,10 @@ import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.widget.ImageButton
 import android.view.Gravity
+import android.widget.Filter
 import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.experimental.async
+
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
@@ -38,8 +41,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         super.onCreate(savedInstanceState)
         setContentView(R.layout.content_main)
 
-        runBlocking {
-            //     locations = Filter.filterCategory(getArticleList(), enabledCategories.map{})
+
+        async {
+            //
+            runBlocking {
+                val filter = mutableListOf<Short>()
+                for ((key, value) in enabledCategories) {
+                    if (value)
+                        filter.add(key.toShort())
+                }
+                locations = filterCategory(getLocationList(), filter)
+            }
 
         }
 
@@ -49,9 +61,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         val fab = findViewById<FloatingActionButton>(R.id.fabFilter).setOnClickListener {
             showDialogFilter()
         }
-       // this.test()
+       this.test()
 
     }
+
 
     override fun onMapReady(p0: GoogleMap?) {
         p0 ?: return
@@ -93,16 +106,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     }
 
     private fun test() {
-        val nums2 = mutableListOf<Short>(38)
-        val nums = mutableListOf<Short>(61, 71)
+
+
         val dat = mutableListOf<DateRange>()
         val geo = GeoCoordinates(1.0, 2.0)
         val katliste = mutableListOf<Short>(2)
-        val obj1 = Article(334787, nums, geo, "hallo", "hallo1", "hallo1", dat, "dffi", 424523)
-        val obj2 = Article(334787, nums2, geo, "hallo", "hallo", "hallo", dat, "dffi", 424523)
-        val testliste = mutableListOf<Article>(obj1, obj2)
+        val obj1 = MapLocation(334787, 2, geo, "hallo", "hallo1", "hallo1", dat, "dffi", 424523)
+        val obj2 = MapLocation(334787, 1, geo, "hallo", "hallo", "hallo", dat, "dffi", 424523)
+        val testliste = mutableListOf<MapLocation>(obj1, obj2)
 
-        val listefertig = Filter.filterCategory(testliste,katliste)
+        val listefertig = filterCategory(testliste,katliste)
+
         val xy = listefertig.get(0)
 
         Log.d("Main","xy: "+xy.abstractText)
