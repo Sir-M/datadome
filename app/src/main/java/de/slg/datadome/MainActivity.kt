@@ -203,6 +203,18 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClickListen
         val cardMusic = dialog.findViewById<CardView>(R.id.cardMusic)
         cardMusic.setOnClickListener(this)
 
+        val btn1 = dialog.findViewById<ImageButton>(R.id.fabStage)
+        val btn2 = dialog.findViewById<ImageButton>(R.id.fabFood)
+        val btn3 = dialog.findViewById<ImageButton>(R.id.fabNight)
+        val btn4 = dialog.findViewById<ImageButton>(R.id.fabMuseum)
+        val btn5 = dialog.findViewById<ImageButton>(R.id.fabMusic)
+
+        enableButton(btn1, enabledCategories.getOrDefaultExtended(1, true))
+        enableButton(btn2, enabledCategories.getOrDefaultExtended(2, true))
+        enableButton(btn3, enabledCategories.getOrDefaultExtended(3, true))
+        enableButton(btn4, enabledCategories.getOrDefaultExtended(4, true))
+        enableButton(btn5, enabledCategories.getOrDefaultExtended(5, true))
+
         dialog.setOnDismissListener {
             seekBarProgress = seekBar.progress
             filterList(seekBarProgress, enabledCategories)
@@ -214,23 +226,22 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClickListen
     }
 
     private fun filterList(timeIndex: Int, categories: MutableMap<Int, Boolean>) {
-        val hashliste = categories.toList()
-        val liste = mutableListOf<Short>()
-        for ((a, current) in hashliste.withIndex()) {
-            val value = current.second
-            if (value) {
-                liste.add(a, current.first.toShort())
-            }
-        }
-        val speicher = getTimespans(timeIndex, baseLocations)
-        val speicher2 = filterCategory(speicher, liste)
-        i = 0
-        for ((i, current2) in speicher2.withIndex()) {
-            drawOnMap(current2, i)
 
-        }
-        locations = speicher2
+        googleMap?.clear()
 
+        val list = mutableListOf<Short>()
+        for ((key, value) in categories) {
+            if (value)
+                list.add(key.toShort())
+        }
+
+        locations = filterCategory(baseLocations, list as List<Short>)
+
+        for (i in 0 until locations.size) {
+            drawOnMap(locations[i], i)
+        }
+
+        //TODO filter times
     }
 
     private fun getTimespans(p0: Int, liste: List<MapLocation>): List<MapLocation> {
@@ -295,56 +306,66 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClickListen
     override fun onClick(v: View?) {
         if (v?.id == R.id.cardStage) {
             Log.i("onClick", "fabStage")
-            if (enabledCategories.getOrDefaultExtended(0, true)) {
+            if (enabledCategories.getOrDefaultExtended(1, true)) {
                 v.findViewById<ImageButton>(R.id.fabStage).background = getDrawable(R.drawable.background_white)
-                enabledCategories.put(0, false)
+                enabledCategories.put(1, false)
             } else {
                 Log.i("onClick", "fabStage false")
                 v.findViewById<ImageButton>(R.id.fabStage).background = getDrawable(R.drawable.background)
-                enabledCategories.put(0, true)
-            }
-
-        } else if (v?.id == R.id.cardFood) {
-            if (enabledCategories.getOrDefaultExtended(1, true)) {
-                v.findViewById<ImageButton>(R.id.fabFood).background = getDrawable(R.drawable.background_white)
-                enabledCategories.put(1, false)
-            } else {
-                v.findViewById<ImageButton>(R.id.fabFood).background = getDrawable(R.drawable.background)
                 enabledCategories.put(1, true)
             }
 
-        } else if (v?.id == R.id.cardNight) {
+        } else if (v?.id == R.id.cardFood) {
             if (enabledCategories.getOrDefaultExtended(2, true)) {
-                v.findViewById<ImageButton>(R.id.fabNight).background = getDrawable(R.drawable.background_white)
+                v.findViewById<ImageButton>(R.id.fabFood).background = getDrawable(R.drawable.background_white)
                 enabledCategories.put(2, false)
             } else {
-                v.findViewById<ImageButton>(R.id.fabNight).background = getDrawable(R.drawable.background)
+                v.findViewById<ImageButton>(R.id.fabFood).background = getDrawable(R.drawable.background)
                 enabledCategories.put(2, true)
             }
 
-        } else if (v?.id == R.id.cardMuseum) {
+        } else if (v?.id == R.id.cardNight) {
             if (enabledCategories.getOrDefaultExtended(3, true)) {
-                v.findViewById<ImageButton>(R.id.fabMuseum).background = getDrawable(R.drawable.background_white)
+                v.findViewById<ImageButton>(R.id.fabNight).background = getDrawable(R.drawable.background_white)
                 enabledCategories.put(3, false)
             } else {
-                v.findViewById<ImageButton>(R.id.fabMuseum).background = getDrawable(R.drawable.background)
+                v.findViewById<ImageButton>(R.id.fabNight).background = getDrawable(R.drawable.background)
                 enabledCategories.put(3, true)
             }
 
-        } else if (v?.id == R.id.cardMusic) {
+        } else if (v?.id == R.id.cardMuseum) {
             if (enabledCategories.getOrDefaultExtended(4, true)) {
-                v.findViewById<ImageButton>(R.id.fabMusic).background = getDrawable(R.drawable.background_white)
+                v.findViewById<ImageButton>(R.id.fabMuseum).background = getDrawable(R.drawable.background_white)
                 enabledCategories.put(4, false)
             } else {
-                v.findViewById<ImageButton>(R.id.fabMusic).background = getDrawable(R.drawable.background)
+                v.findViewById<ImageButton>(R.id.fabMuseum).background = getDrawable(R.drawable.background)
                 enabledCategories.put(4, true)
+            }
+
+        } else if (v?.id == R.id.cardMusic) {
+            if (enabledCategories.getOrDefaultExtended(5, true)) {
+                v.findViewById<ImageButton>(R.id.fabMusic).background = getDrawable(R.drawable.background_white)
+                enabledCategories.put(5, false)
+            } else {
+                v.findViewById<ImageButton>(R.id.fabMusic).background = getDrawable(R.drawable.background)
+                enabledCategories.put(5, true)
             }
 
         }
     }
 
-    private fun MutableMap<Int, Boolean>.getOrDefaultExtended(index: Int, default: Boolean) : Boolean {
-        return this[index] ?: default
+    private fun enableButton(id: ImageButton, bool: Boolean) {
+        if (bool) {
+            id.background = getDrawable(R.drawable.background)
+            //Log.i("")
+        } else {
+            id.background = getDrawable(R.drawable.background_white)
+
+        }
+    }
+
+    private fun MutableMap<Int, Boolean>.getOrDefaultExtended(key: Int, default: Boolean): Boolean {
+        return this[key] ?: default
     }
 
     private fun getMarkerIconFromDrawable(drawable: Drawable): BitmapDescriptor {
