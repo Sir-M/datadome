@@ -42,8 +42,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClickListen
     private val enabledCategories = mutableMapOf(1 to true, 2 to true, 3 to true, 4 to true, 5 to true)
     private var seekBarProgress = 4
 
-    private var i = 0
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.content_main)

@@ -69,7 +69,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginStart="25dp"
                 android:background="@drawable/background"
-                android:clickable="true"
+                android:clickable="false"
                 android:focusable="true"
                 android:tag="1"
                 app:srcCompat="@drawable/ic_outline_theater" />
@@ -110,7 +110,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginStart="25dp"
                 android:background="@drawable/background"
-                android:clickable="true"
+                android:clickable="false"
                 android:focusable="true"
                 android:tag="2"
                 app:srcCompat="@drawable/ic_outline_restaurant_24px" />
@@ -149,7 +149,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginStart="25dp"
                 android:background="@drawable/background"
-                android:clickable="true"
+                android:clickable="false"
                 android:focusable="true"
                 android:tag="3"
                 app:srcCompat="@drawable/ic_outline_local_bar_24px" />
@@ -189,7 +189,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginStart="25dp"
                 android:background="@drawable/background"
-                android:clickable="true"
+                android:clickable="false"
                 android:focusable="true"
 
                 android:tag="4"
@@ -230,8 +230,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginStart="25dp"
                 android:background="@drawable/background"
-
-                android:clickable="true"
+                android:clickable="false"
                 android:focusable="true"
                 android:tag="5"
                 app:srcCompat="@drawable/ic_outline_music_note_24px" />
