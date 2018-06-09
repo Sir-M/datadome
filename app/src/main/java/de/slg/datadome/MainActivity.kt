@@ -203,6 +203,18 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClickListen
         val cardMusic = dialog.findViewById<CardView>(R.id.cardMusic)
         cardMusic.setOnClickListener(this)
 
+        val btn1 = dialog.findViewById<ImageButton>(R.id.fabStage)
+        val btn2 = dialog.findViewById<ImageButton>(R.id.fabFood)
+        val btn3 = dialog.findViewById<ImageButton>(R.id.fabNight)
+        val btn4 = dialog.findViewById<ImageButton>(R.id.fabMuseum)
+        val btn5 = dialog.findViewById<ImageButton>(R.id.fabMusic)
+
+        enableButton(btn1, enabledCategories.getOrDefaultExtended(1, true))
+        enableButton(btn2, enabledCategories.getOrDefaultExtended(2, true))
+        enableButton(btn3, enabledCategories.getOrDefaultExtended(3, true))
+        enableButton(btn4, enabledCategories.getOrDefaultExtended(4, true))
+        enableButton(btn5, enabledCategories.getOrDefaultExtended(5, true))
+
         dialog.setOnDismissListener {
             seekBarProgress = seekBar.progress
             filterList(seekBarProgress, enabledCategories)
@@ -219,7 +231,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClickListen
 
         val list = mutableListOf<Short>()
         for ((key, value) in categories) {
-            if(value)
+            if (value)
                 list.add(key.toShort())
         }
 
@@ -342,7 +354,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClickListen
         }
     }
 
-    private fun MutableMap<Int, Boolean>.getOrDefaultExtended(key: Int, default: Boolean) : Boolean {
+    private fun enableButton(id: ImageButton, bool: Boolean) {
+        if (bool) {
+            id.background = getDrawable(R.drawable.background)
+            //Log.i("")
+        } else {
+            id.background = getDrawable(R.drawable.background_white)
+
+        }
+    }
+
+    private fun MutableMap<Int, Boolean>.getOrDefaultExtended(key: Int, default: Boolean): Boolean {
         return this[key] ?: default
     }
 
