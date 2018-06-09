@@ -31,7 +31,7 @@ import com.google.android.gms.maps.model.*
 import java.util.*
 
 @Suppress("DEPRECATION")
-class MainActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClickListener, GoogleMap.OnInfoWindowClickListener {
+class MainActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClickListener, GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMarkerClickListener {
 
     private var googleMap: GoogleMap? = null
     private val perm = 5
@@ -72,6 +72,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClickListen
         ui?.isRotateGesturesEnabled = false
         ui?.isMapToolbarEnabled = false
         googleMap?.setOnInfoWindowClickListener(this)
+        googleMap?.setOnMarkerClickListener(this)
 
         locations = baseLocations
         filterList(4, enabledCategories)
@@ -139,6 +140,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClickListen
             }
         }
 
+    }
+
+    override fun onMarkerClick(p0: Marker?): Boolean {
+
+        Log.d("DEBUG", "sjkdhasdlhasd")
+
+        if (bottomSheetDialog.state != BottomSheetBehavior.STATE_HIDDEN)
+            bottomSheetDialog.state = BottomSheetBehavior.STATE_HIDDEN
+        return false
     }
 
     private fun enableMyLocation() {

@@ -9,8 +9,6 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import android.net.ConnectivityManager
 
-
-
 var baseLocations = listOf<MapLocation>()
 
 class Start : AppCompatActivity() {
