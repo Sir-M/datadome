@@ -214,23 +214,22 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClickListen
     }
 
     private fun filterList(timeIndex: Int, categories: MutableMap<Int, Boolean>) {
-        val hashliste = categories.toList()
-        val liste = mutableListOf<Short>()
-        for ((a, current) in hashliste.withIndex()) {
-            val value = current.second
-            if (value) {
-                liste.add(a, current.first.toShort())
-            }
-        }
-        val speicher = getTimespans(timeIndex, baseLocations)
-        val speicher2 = filterCategory(speicher, liste)
-        i = 0
-        for ((i, current2) in speicher2.withIndex()) {
-            drawOnMap(current2, i)
 
-        }
-        locations = speicher2
+        googleMap?.clear()
 
+        val list = mutableListOf<Short>()
+        for ((key, value) in categories) {
+            if(value)
+                list.add(key.toShort())
+        }
+
+        locations = filterCategory(baseLocations, list as List<Short>)
+
+        for (i in 0 until locations.size) {
+            drawOnMap(locations[i], i)
+        }
+
+        //TODO filter times
     }
 
     private fun getTimespans(p0: Int, liste: List<MapLocation>): List<MapLocation> {
@@ -297,47 +296,47 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClickListen
             Log.i("onClick", "fabStage")
             if (enabledCategories.getOrDefaultExtended(0, true)) {
                 v.findViewById<ImageButton>(R.id.fabStage).background = getDrawable(R.drawable.background_white)
-                enabledCategories.put(0, false)
+                enabledCategories.put(1, false)
             } else {
                 Log.i("onClick", "fabStage false")
                 v.findViewById<ImageButton>(R.id.fabStage).background = getDrawable(R.drawable.background)
-                enabledCategories.put(0, true)
+                enabledCategories.put(1, true)
             }
 
         } else if (v?.id == R.id.cardFood) {
             if (enabledCategories.getOrDefaultExtended(1, true)) {
                 v.findViewById<ImageButton>(R.id.fabFood).background = getDrawable(R.drawable.background_white)
-                enabledCategories.put(1, false)
+                enabledCategories.put(2, false)
             } else {
                 v.findViewById<ImageButton>(R.id.fabFood).background = getDrawable(R.drawable.background)
-                enabledCategories.put(1, true)
+                enabledCategories.put(2, true)
             }
 
         } else if (v?.id == R.id.cardNight) {
             if (enabledCategories.getOrDefaultExtended(2, true)) {
                 v.findViewById<ImageButton>(R.id.fabNight).background = getDrawable(R.drawable.background_white)
-                enabledCategories.put(2, false)
+                enabledCategories.put(3, false)
             } else {
                 v.findViewById<ImageButton>(R.id.fabNight).background = getDrawable(R.drawable.background)
-                enabledCategories.put(2, true)
+                enabledCategories.put(3, true)
             }
 
         } else if (v?.id == R.id.cardMuseum) {
             if (enabledCategories.getOrDefaultExtended(3, true)) {
                 v.findViewById<ImageButton>(R.id.fabMuseum).background = getDrawable(R.drawable.background_white)
-                enabledCategories.put(3, false)
+                enabledCategories.put(4, false)
             } else {
                 v.findViewById<ImageButton>(R.id.fabMuseum).background = getDrawable(R.drawable.background)
-                enabledCategories.put(3, true)
+                enabledCategories.put(4, true)
             }
 
         } else if (v?.id == R.id.cardMusic) {
             if (enabledCategories.getOrDefaultExtended(4, true)) {
                 v.findViewById<ImageButton>(R.id.fabMusic).background = getDrawable(R.drawable.background_white)
-                enabledCategories.put(4, false)
+                enabledCategories.put(5, false)
             } else {
                 v.findViewById<ImageButton>(R.id.fabMusic).background = getDrawable(R.drawable.background)
-                enabledCategories.put(4, true)
+                enabledCategories.put(5, true)
             }
 
         }
