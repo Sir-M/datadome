@@ -42,12 +42,12 @@ fun getLocationList(): List<MapLocation> {
 }
 
 internal fun mapToUserCategory(categories: List<Int>): Int {
-    return if (41 in categories || 25 in categories) 1
-    else if (61 in categories) 2
-    else if (60 in categories || 63 in categories) 3
-    else if (71 in categories) 4
-    else if (26 in categories || 38 in categories) 5
-    else 1
+    return if (61 in categories || 59 in categories) 2
+    else if (71 in categories || 49 in categories || 72 in categories || 73 in categories) 4
+    else if (26 in categories || 38 in categories || 7 in categories || 328 in categories || 39 in categories) 5
+    else if (41 in categories || 25 in categories || 42 in categories || 44 in categories || 6 in categories || 74 in categories) 1
+    else if (60 in categories || 63 in categories || 47 in categories || 43 in categories || 100 in categories || 101 in categories) 3
+    else 5
 }
 
 data class MapLocation constructor(val id: Long,
