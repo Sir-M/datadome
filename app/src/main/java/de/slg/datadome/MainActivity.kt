@@ -294,7 +294,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClickListen
     override fun onClick(v: View?) {
         if (v?.id == R.id.cardStage) {
             Log.i("onClick", "fabStage")
-            if (enabledCategories.getOrDefaultExtended(0, true)) {
+            if (enabledCategories.getOrDefaultExtended(1, true)) {
                 v.findViewById<ImageButton>(R.id.fabStage).background = getDrawable(R.drawable.background_white)
                 enabledCategories.put(1, false)
             } else {
@@ -304,7 +304,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClickListen
             }
 
         } else if (v?.id == R.id.cardFood) {
-            if (enabledCategories.getOrDefaultExtended(1, true)) {
+            if (enabledCategories.getOrDefaultExtended(2, true)) {
                 v.findViewById<ImageButton>(R.id.fabFood).background = getDrawable(R.drawable.background_white)
                 enabledCategories.put(2, false)
             } else {
@@ -313,7 +313,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClickListen
             }
 
         } else if (v?.id == R.id.cardNight) {
-            if (enabledCategories.getOrDefaultExtended(2, true)) {
+            if (enabledCategories.getOrDefaultExtended(3, true)) {
                 v.findViewById<ImageButton>(R.id.fabNight).background = getDrawable(R.drawable.background_white)
                 enabledCategories.put(3, false)
             } else {
@@ -322,7 +322,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClickListen
             }
 
         } else if (v?.id == R.id.cardMuseum) {
-            if (enabledCategories.getOrDefaultExtended(3, true)) {
+            if (enabledCategories.getOrDefaultExtended(4, true)) {
                 v.findViewById<ImageButton>(R.id.fabMuseum).background = getDrawable(R.drawable.background_white)
                 enabledCategories.put(4, false)
             } else {
@@ -331,7 +331,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClickListen
             }
 
         } else if (v?.id == R.id.cardMusic) {
-            if (enabledCategories.getOrDefaultExtended(4, true)) {
+            if (enabledCategories.getOrDefaultExtended(5, true)) {
                 v.findViewById<ImageButton>(R.id.fabMusic).background = getDrawable(R.drawable.background_white)
                 enabledCategories.put(5, false)
             } else {
@@ -342,8 +342,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClickListen
         }
     }
 
-    private fun MutableMap<Int, Boolean>.getOrDefaultExtended(index: Int, default: Boolean) : Boolean {
-        return this[index] ?: default
+    private fun MutableMap<Int, Boolean>.getOrDefaultExtended(key: Int, default: Boolean) : Boolean {
+        return this[key] ?: default
     }
 
     private fun getMarkerIconFromDrawable(drawable: Drawable): BitmapDescriptor {
