@@ -31,7 +31,7 @@ import com.google.android.gms.maps.model.*
 import java.util.*
 
 @Suppress("DEPRECATION")
-class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener, View.OnClickListener {
+class MainActivity : AppCompatActivity(), OnMapReadyCallback, View.OnClickListener, GoogleMap.OnInfoWindowClickListener {
 
     private var googleMap: GoogleMap? = null
     private val perm = 5
@@ -73,13 +73,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         val ui = googleMap?.uiSettings
         ui?.isRotateGesturesEnabled = false
         ui?.isMapToolbarEnabled = false
-        googleMap?.setOnMarkerClickListener(this)
+        googleMap?.setOnInfoWindowClickListener(this)
 
         locations = baseLocations
         filterList(4, enabledCategories)
 
         enableMyLocation() //location services
-
     }
 
 
@@ -117,16 +116,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     }
 
-
-    });
-
-    override fun onInfoWindowClick(marker: Marker ) {
-        
-
-    }
-
-    override fun onMarkerClick(p0: Marker?): Boolean {
-        val markerID = p0?.tag
+    override fun onInfoWindowClick(marker: Marker) {
+        val markerID = marker.tag
         Log.i("MARKER Type", markerID.toString())
         val markedLoc = locations[markerID as Int]
 
@@ -147,9 +138,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 bottomSheetDialog.state = BottomSheetBehavior.STATE_COLLAPSED
             }
         }
-        return false
-    }
 
+    }
 
     private fun enableMyLocation() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -301,7 +291,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
      *
      */
     override fun onClick(v: View?) {
-        if (v?.id == R.id.fabStage) {
+        if (v?.id == R.id.cardStage) {
             Log.i("onClick", "fabStage")
             if (enabledCategories.getOrDefaultExtended(0, true)) {
                 v.findViewById<ImageButton>(R.id.fabStage).background = getDrawable(R.drawable.background_white)
@@ -312,7 +302,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 enabledCategories.put(0, true)
             }
 
-        } else if (v?.id == R.id.fabFood) {
+        } else if (v?.id == R.id.cardFood) {
             if (enabledCategories.getOrDefaultExtended(1, true)) {
                 v.findViewById<ImageButton>(R.id.fabFood).background = getDrawable(R.drawable.background_white)
                 enabledCategories.put(1, false)
@@ -321,7 +311,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 enabledCategories.put(1, true)
             }
 
-        } else if (v?.id == R.id.fabNight) {
+        } else if (v?.id == R.id.cardNight) {
             if (enabledCategories.getOrDefaultExtended(2, true)) {
                 v.findViewById<ImageButton>(R.id.fabNight).background = getDrawable(R.drawable.background_white)
                 enabledCategories.put(2, false)
@@ -330,7 +320,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 enabledCategories.put(2, true)
             }
 
-        } else if (v?.id == R.id.fabMuseum) {
+        } else if (v?.id == R.id.cardMuseum) {
             if (enabledCategories.getOrDefaultExtended(3, true)) {
                 v.findViewById<ImageButton>(R.id.fabMuseum).background = getDrawable(R.drawable.background_white)
                 enabledCategories.put(3, false)
@@ -339,7 +329,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 enabledCategories.put(3, true)
             }
 
-        } else if (v?.id == R.id.fabMusic) {
+        } else if (v?.id == R.id.cardMusic) {
             if (enabledCategories.getOrDefaultExtended(4, true)) {
                 v.findViewById<ImageButton>(R.id.fabMusic).background = getDrawable(R.drawable.background_white)
                 enabledCategories.put(4, false)
@@ -364,5 +354,4 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
 }
-
 
